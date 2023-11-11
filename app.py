@@ -66,10 +66,10 @@ def get_item_prices():
     item_prices = {name: price for name, price in items}
     print(item_prices)
     return item_prices
-@app.route('/')
-def update_expiration_route():
-    update_expiration_dates('vending_machines_DB.sqlite.db')
-    return "Expiration dates updated successfully!"
+# @app.route('/')
+# def update_expiration_route():
+#     update_expiration_dates('vending_machines_DB.sqlite.db')
+#     return "Expiration dates updated successfully!"
 @app.route('/')
 def index():
     # Get the current prices of items from the database
