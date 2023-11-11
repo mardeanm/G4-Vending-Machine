@@ -15,12 +15,26 @@
 # SELECT COUNT(*)
 #FROM Products;
 # to update batch
-from flask import Flask, render_template
+from flask import Flask, render_template, request, jsonify
 import sqlite3
 from datetime import datetime, timedelta
 app = Flask(__name__)
 
+VM_ID=1
+def get_items():
+    conn = sqlite3.connect('vending_machines_DB.sqlite.db')
+    cur = conn.cursor()
 
+    # Fetch item details
+    cur.execute("SELECT Item_ID, Price FROM Items")
+    items = {item[0]: item[1] for item in cur.fetchall()}
+
+    # Fetch quantities for each item
+    cur.execute("SELECT Item_ID, SUM(Quantity) as TotalQuantity FROM Inventory GROUP BY Item_ID")
+    quantities = {row[0]: row[1] for row in cur.fetchall()}
+
+    conn.close()
+    return items,quantities
 def update_expiration_dates(db_path):
 
 # Connect to the SQLite database
@@ -48,35 +62,43 @@ def update_expiration_dates(db_path):
 
     # Close the connection
     conn.close()
+class Cart:
+    def __init__(self):
+        self.items = {}  # Format: {item_id: {'quantity': quantity, 'name': name, 'price': price}}
 
+    def add_item(self, item_id, quantity, name, price):
+        if item_id in self.items:
+            self.items[item_id]['quantity'] += quantity
+        else:
+            self.items[item_id] = {'quantity': quantity, 'name': name, 'price': price}
 
-def get_item_prices():
-    # Connect to your SQLite database
-    conn = sqlite3.connect('vending_machines_DB.sqlite.db')
-    cur = conn.cursor()
+    def check_out(self):
+        # Checkout logic here
+        pass
 
-    # Query the database for item prices
-    cur.execute("SELECT item_name, price FROM items")  # Adjust the table and column names as per your DB
-    items = cur.fetchall()
+cart = Cart()
 
-    # Close the connection to the database
-    conn.close()
+@app.route('/add_to_cart', methods=['POST'])
+def add_to_cart():
+    data = request.json
+    item_id = data['item_id']
+    quantity = data['quantity']
+    # Fetch item details like name and price from the database
+    # For example:
+    name = "Item Name"  # Replace with actual database query
+    price = 10.00       # Replace with actual database query
 
-    # Convert fetched data into a dictionary
-    item_prices = {name: price for name, price in items}
-    print(item_prices)
-    return item_prices
+    cart.add_item(item_id, quantity, name, price)
+    return jsonify(success=True)
+
 # @app.route('/')
 # def update_expiration_route():
 #     update_expiration_dates('vending_machines_DB.sqlite.db')
 #     return "Expiration dates updated successfully!"
 @app.route('/')
 def index():
-    # Get the current prices of items from the database
-    item_prices = get_item_prices()
-
-    # Pass the prices to the template
-    return render_template('index.html', item_prices=item_prices)
+   items,quantities=get_items()
+   return render_template('index.html', items=items, quantities=quantities)
 
 if __name__ == '__main__':
 
@@ -95,3 +117,18 @@ if __name__ == '__main__':
 # if __name__ == '__main__':
 #     start_scheduler()
 #     app.run()
+
+
+#Ignore for now
+ # conn = sqlite3.connect('vending_machines_DB.sqlite.db')
+    # cur = conn.cursor()
+    #
+    # # Fetch item details
+    # cur.execute("SELECT Item_ID, Price FROM Items")
+    # items = {item[0]: item[1] for item in cur.fetchall()}
+    #
+    # # Fetch quantities for each item
+    # cur.execute("SELECT Item_ID, SUM(Quantity) as TotalQuantity FROM Inventory GROUP BY Item_ID")
+    # quantities = {row[0]: row[1] for row in cur.fetchall()}
+    #
+    # conn.close()

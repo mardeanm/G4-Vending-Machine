@@ -29,66 +29,70 @@
 
 				<!-- Main -->
 					<div id="main">
-						<article class="thumb">
+
+{#                        cheeto#}
+						<article class="thumb" id="item-1">
 							<a href="../static/images/fulls/cheeto1.jpg" class="image"><img src="../static/images/thumbs/cheeto.png" alt="" /></a>
-							<h2>$1.75</h2>
-							<p></p>
-						</article>
-						<article class="thumb">
+                           <h2>${{ "%.2f"|format(items.get(1, 'N/A')) if items.get(1) is not none else 'N/A' }}</h2>
+                            <p>Quantity Available: {{ quantities.get(1, 'Out of Stock') }}</p>						</article>
+{#                        hot cheeot#}
+						<article class="thumb"  id="item-2">
 							<a href="../static/images/fulls/hotcheetos1.jpg" class="image"><img src="../static/images/thumbs/hotcheetos.jpg" alt="" /></a>
-							<h2>$1.75</h2>
-							<p></p>
-						</article>
-						<article class="thumb">
+                           <h2>${{ "%.2f"|format(items.get(2, 'N/A')) if items.get(1) is not none else 'N/A' }}</h2>
+                            <p>Quantity Available: {{ quantities.get(2, 'Out of Stock') }}</p>						</article>
+{#                        doritos#}
+						<article class="thumb"  id="item-3">
 							<a href="../static/images/fulls/03.jpg" class="image"><img src="../static/images/thumbs/doritos.png" alt="" /></a>
-							<h2>$1.75</h2>
-							<p></p>
-						</article>
-						<article class="thumb">
+                           <h2>${{ "%.2f"|format(items.get(3, 'N/A')) if items.get(1) is not none else 'N/A' }}</h2>
+                            <p>Quantity Available: {{ quantities.get(3, 'Out of Stock') }}</p>						</article>
+{#                        funyuns#}
+						<article class="thumb"  id="item-4">
 							<a href="../static/images/fulls/04.jpg" class="image"><img src="../static/images/thumbs/funyuns.png" alt="" /></a>
-							<h2>$1.75</h2>
-							<p></p>
-						</article>
-						<article class="thumb">
+                           <h2>${{ "%.2f"|format(items.get(4, 'N/A')) if items.get(1) is not none else 'N/A' }}</h2>
+                            <p>Quantity Available: {{ quantities.get(4, 'Out of Stock') }}</p>						</article>
+{#                        reese's#}
+						<article class="thumb" id="item-5">
 							<a href="../static/images/fulls/05.jpg" class="image"><img src="../static/images/thumbs/reeses.png" alt="" /></a>
-							<h2>$1.75</h2>
-							<p></p>
-						</article>
-						<article class="thumb">
+                           <h2>${{ "%.2f"|format(items.get(5, 'N/A')) if items.get(1) is not none else 'N/A' }}</h2>
+                            <p>Quantity Available: {{ quantities.get(5, 'Out of Stock') }}</p>						</article>
+{#                        snickers#}
+						<article class="thumb" id="item-6">
 							<a href="../static/images/fulls/06.jpg" class="image"><img src="../static/images/thumbs/snickers.png" alt="" /></a>
-							<h2>$1.75</h2>
-							<p></p>
-						</article>
-						<article class="thumb">
-							<a href="../static/images/fulls/07.jpg" class="image"><img src="../static/images/thumbs/MM.png" alt="" /></a>
-							<h2>$1.75</h2>
-							<p></p>
-						</article>
-						<article class="thumb">
+                           <h2>${{ "%.2f"|format(items.get(6, 'N/A')) if items.get(1) is not none else 'N/A' }}</h2>
+                            <p>Quantity Available: {{ quantities.get(6, 'Out of Stock') }}</p>						</article>
+{#                        m&m's#}
+						<article class="thumb" id="item-7">
+							<a href="../static/images/fulls/07.jpg" class="image"><img src="../static/images/thumbs/mm.png" alt="" /></a>
+                           <h2>${{ "%.2f"|format(items.get(7, 'N/A')) if items.get(1) is not none else 'N/A' }}</h2>
+                            <p>Quantity Available: {{ quantities.get(7, 'Out of Stock') }}</p>						</article>
+{#                        oreo#}
+						<article class="thumb" id="item-8">
 							<a href="../static/images/fulls/08.jpg" class="image"><img src="../static/images/thumbs/oreo.png" alt="" /></a>
-							<h2>$1.75</h2>
-							<p></p>
-						</article>
-						<article class="thumb">
+                           <h2>${{ "%.2f"|format(items.get(8, 'N/A')) if items.get(1) is not none else 'N/A' }}</h2>
+                            <p>Quantity Available: {{ quantities.get(8, 'Out of Stock') }}</p>						</article>
+{#                        chips ahoy#}
+						<article class="thumb" id="item-9">
 							<a href="../static/images/fulls/09.jpg" class="image"><img src="../static/images/thumbs/chips_ahoy.png" alt="" /></a>
-							<h2>$1.75</h2>
-							<p></p>
+                           <h2>${{ "%.2f"|format(items.get(9, 'N/A')) if items.get(1) is not none else 'N/A' }}</h2>
+                            <p>Quantity Available: {{ quantities.get(9, 'Out of Stock') }}</p>						</article>
 						</article>
-						<article class="thumb">
-							<a href="../static/images/fulls/10.jpg" class="image"><img src="../static/images/thumbs/granola.png" alt="" /></a>
-							<h2>$1.75</h2>
-							<p></p>
-						</article>
-						<article class="thumb">
+{#                        nature valley#}
+						<article class="thumb" id="item-10">
+							<a href="../static/images/fulls/10.jpg" class="image"><img src="../static/images/thumbs/nature_valley.png" alt="" /></a>
+                           <h2>${{ "%.2f"|format(items.get(10, 'N/A')) if items.get(1) is not none else 'N/A' }}</h2>
+                            <p>Quantity Available: {{ quantities.get(10, 'Out of Stock') }}</p>						</article>
+{#                        gold fish#}
+						<article class="thumb" id="item-11">
 							<a href="../static/images/fulls/11.jpg" class="image"><img src="../static/images/thumbs/goldfish.png" alt="" /></a>
-							<h2>$1.75</h2>
-							<p></p>
+                           <h2>${{ "%.2f"|format(items.get(11, 'N/A')) if items.get(1) is not none else 'N/A' }}</h2>
+                            <p>Quantity Available: {{ quantities.get(11, 'Out of Stock') }}</p>						</article>
 						</article>
-						<article class="thumb">
+{#                        beef jerky#}
+						<article class="thumb" id="item-12">
 							<a href="../static/images/fulls/12.jpg" class="image"><img src="../static/images/thumbs/beef_jerky.png" alt="" /></a>
-							<h2>$1.75</h2>
-							<p></p>
-						</article>
+                           <h2>${{ "%.2f"|format(items.get(12, 'N/A')) if items.get(1) is not none else 'N/A' }}</h2>
+                            <p>Quantity Available: {{ quantities.get(12, 'Out of Stock') }}</p>						</article>
+
 					</div>
 
 				<!-- Footer -->
