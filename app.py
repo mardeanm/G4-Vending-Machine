@@ -17,7 +17,8 @@
 # to update batch
 from flask import Flask, request, jsonify
 import sqlite3
-
+from apscheduler.schedulers.background import BackgroundScheduler
+import DB_updater
 app = Flask(__name__)
 
 class Cart:
@@ -109,16 +110,22 @@ def process_card_payment(card_details, amount):
     # Placeholder function for processing card payment
     return True  # Assume payment is always successful for simulation
 
+def start_scheduler():
+    scheduler = BackgroundScheduler()
+    scheduler.add_job(func=DB_updater.transfer_data(), trigger="interval",  minutes=1)
+    scheduler.start()
+
 # Initialize the cart
 cart = Cart()
 
 if __name__ == '__main__':
+    start_scheduler()
     app.run(debug=True)
 
 
 # ... (Your existing code for scheduling expiration updates)
 
-# from apscheduler.schedulers.background import BackgroundScheduler
+#
 #
 # # ... (rest of your imports and update_expiration_dates function)
 #
@@ -134,16 +141,3 @@ if __name__ == '__main__':
 #     app.run()
 
 
-#Ignore for now
- # conn = sqlite3.connect('vending_machines_DB.sqlite.db')
-    # cur = conn.cursor()
-    #
-    # # Fetch item details
-    # cur.execute("SELECT Item_ID, Price FROM Items")
-    # items = {item[0]: item[1] for item in cur.fetchall()}
-    #
-    # # Fetch quantities for each item
-    # cur.execute("SELECT Item_ID, SUM(Quantity) as TotalQuantity FROM Inventory GROUP BY Item_ID")
-    # quantities = {row[0]: row[1] for row in cur.fetchall()}
-    #
-    # conn.close()
