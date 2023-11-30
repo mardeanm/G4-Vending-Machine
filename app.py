@@ -59,9 +59,7 @@ def decrease_inventory(item_id, quantity):
     conn.commit()
     conn.close()
 
-@app.route('/')
-def main_page():
-    return render_template('index1.html')
+
 @app.route('/add_to_cart', methods=['POST'])
 def add_to_cart():
     # Add items to the cart
@@ -121,6 +119,27 @@ def start_scheduler():
 # Initialize the cart
 cart = Cart()
 
+VM_ID=1
+def get_items():
+    conn = sqlite3.connect('vending_machines_DB.sqlite.db')
+    cur = conn.cursor()
+
+    # Fetch item details
+    cur.execute("SELECT Item_ID, Price FROM Items")
+    items = {item[0]: item[1] for item in cur.fetchall()}
+
+    # Fetch quantities for each item
+    cur.execute("SELECT Item_ID, SUM(Quantity) as TotalQuantity FROM Inventory GROUP BY Item_ID")
+    quantities = {row[0]: row[1] for row in cur.fetchall()}
+
+    conn.close()
+    return items,quantities
+
+@app.route('/')
+def main_page():
+    items,quantities=get_items()
+
+    return render_template('index1.html', items=items, quantities=quantities)
 if __name__ == '__main__':
     start_scheduler()
     app.run(debug=True)
