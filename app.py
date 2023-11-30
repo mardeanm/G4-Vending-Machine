@@ -15,7 +15,7 @@
 # SELECT COUNT(*)
 #FROM Products;
 # to update batch
-from flask import Flask, request, jsonify
+from flask import Flask, request, jsonify, render_template
 import sqlite3
 from apscheduler.schedulers.background import BackgroundScheduler
 import DB_updater
@@ -59,6 +59,9 @@ def decrease_inventory(item_id, quantity):
     conn.commit()
     conn.close()
 
+@app.route('/')
+def main_page():
+    return render_template('index1.html')
 @app.route('/add_to_cart', methods=['POST'])
 def add_to_cart():
     # Add items to the cart
