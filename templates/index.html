@@ -27,6 +27,14 @@
             border: 1px solid #ccc;
             padding: 10px;
         }
+
+        button {
+            padding: 10px;
+            background-color: #4caf50;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
     </style>
 </head>
 <body>
@@ -35,66 +43,69 @@
     <div id="items">
         <div class="item" onclick="addToCart('Beef Jerky', 1.5)">
             <br>Beef Jerky
-            <button onclick="removeItem('Beef Jerky')">-</button>
             <br>$1.50
         </div>
+        <button onclick="removeItem('Beef Jerky')">-</button>
+
         <div class="item" onclick="addToCart('Cheetos', 1.5)">
             <br>Cheetos
-            <button onclick="removeItem('Cheetos')">-</button>
             <br>$1.50
-        </div>
+        </div><button onclick="removeItem('Cheetos')">-</button>
+
         <div class="item" onclick="addToCart('Chips Ahoy', 1.5)">
             <br>Chips Ahoy
-            <button onclick="removeItem('Chips Ahoy')">-</button>
             <br>$1.50
-        </div>
+        </div><button onclick="removeItem('Chips Ahoy')">-</button>
+
         <br><div class="item" onclick="addToCart('Doritos', 1.5)">
             <br>Doritos
-            <button onclick="removeItem('Doritos')">-</button>
             <br>$1.50
-        </div>
+        </div><button onclick="removeItem('Doritos')">-</button>
+
         <div class="item" onclick="addToCart('Funyuns', 1.5)">
             <br>Funyuns
-            <button onclick="removeItem('Funyuns')">-</button><br>$1.50
-        </div>
+            <br>$1.50
+        </div><button onclick="removeItem('Funyuns')">-</button>
+
         <div class="item" onclick="addToCart('Goldfish', 1.5)">
             <br>Goldfish
-            <button onclick="removeItem('Goldfish')">-</button><br>$1.50
-        </div>
+            <br>$1.50
+        </div><button onclick="removeItem('Goldfish')">-</button>
+
         <br><div class="item" onclick="addToCart('Flamin Hot Cheetos', 1.5)">
             <br>Flaming Hot Cheetos
-            <button onclick="removeItem('Flamin Hot Cheetos')">-</button>
             <br>$1.50
-        </div>
+        </div><button onclick="removeItem('Flamin Hot Cheetos')">-</button>
+
         <div class="item" onclick="addToCart('Lays', 1.5)">
             <br>Lays
-            <button onclick="removeItem('Lays')">-</button>
             <br>$1.50
-        </div>
+        </div><button onclick="removeItem('Lays')">-</button>
+
         <div class="item" onclick="addToCart('M&Ms', 1.5)">
             <br>M&Ms
-            <button onclick="removeItem('M&Ms')">-</button>
             <br>$1.50
-        </div>
+        </div><button onclick="removeItem('M&Ms')">-</button>
+
        <br><div class="item" onclick="addToCart('Nature Valley', 1.5)">
             <br>Nature Valley
-            <button onclick="removeItem('Nature Valley')">-</button>
             <br>$1.50
-        </div>
+        </div><button onclick="removeItem('Nature Valley')">-</button>
+
         <div class="item" onclick="addToCart('Oreos', 1.5)">
             <br>Oreos
-            <button onclick="removeItem('Oreos')">-</button>
             <br>$1.50
-        </div>
+        </div><button onclick="removeItem('Oreos')">-</button>
+
         <div class="item" onclick="addToCart('Reeses', 1.5)">
             <br>Reeses
-            <button onclick="removeItem('Reeses')">-</button>
             <br>$1.50
-        </div>
+        </div><button onclick="removeItem('Reeses')">-</button>
+
         <br><div class="item" onclick="addToCart('Snickers', 1.5)">
             <br>Snickers
-            <button onclick="removeItem('Snickers')">-</button><br>$1.50
-        </div>
+            <br>$1.50
+        </div><button onclick="removeItem('Snickers')">-</button>
 
     </div>
 
@@ -162,7 +173,7 @@
         }
 
         function processPayment() {
-            function processPayment() {
+
             // Gather card details
             var cardNumber = document.getElementById('card-number').value;
             var cardLength = 16;
@@ -177,16 +188,15 @@
                 return;
             }
             if (cardNumber.length !== cardLength || expiryDate.length !== exDateLength || cvv.length !== cvvLength){
-                alert("Card declined: invalid card number, cvv, or expiry date");
+                alert("Card declined: invalid card number, cvv, or expiry date.");
             }
             else{
                 alert("Payment accepted!");
             }
 
             // Send card details to the backend for processing
-            // This is where you would make an AJAX request to your server-side endpoint
-            // Replace '/process_payment' with the actual URL of your backend endpoint
-            fetch('/process_payment', {
+            //  make an AJAX request to server-side endpoint
+            fetch('/app.py', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -212,7 +222,6 @@
                 alert('An error occurred. Please try again.');
             });
         }
-        }
 
         function checkout() {
             // Implement payment processing logic here
@@ -233,7 +242,7 @@
                 }
                 else if (cashAmount > total) {
                     var change = cashAmount - total
-                    alert(`Payment successful! Change: $${(change).toFixed(2)}`);
+                    alert(`Payment successful! Change: $${change.toFixed(2)}`);
                     resetCart();
                 } else {
                     alert("Insufficient cash. Please enter the correct amount.");
@@ -245,140 +254,15 @@
             } else {
                 alert("Invalid payment method. Please enter 'cash' or 'card'.");
             }
+
+            function resetCart() {
+                cartItems = [];
+                total = 0;
+                updateCartDisplay();
+            }
         }
     </script>
 
-<!--
-<body>
-  <div style="width: 100%; height: 100%; position: relative">
-      <div style="width: 1456px; height: 1892px; left: 0px; top: 0px; position: absolute; background: #FDFDFD"></div>
-      <div style="width: 1456px; height: 1024px; left: 0px; top: 1445px; position: absolute; background: white">
-          <div style="width: 832px; height: 159px; left: 96px; top: 301px; position: absolute; background: #FAFAF5; border-radius: 18px; overflow: hidden; border: 2px #E6E6E6 solid">
-              <div style="left: 184px; top: 18px; position: absolute; color: black; font-size: 18px; font-family: Inter; font-weight: 600; line-height: 26px; word-wrap: break-word">Flamin’ Hot Cheetos</div>
-              <div style="left: 756px; top: 18px; position: absolute; text-align: right; color: black; font-size: 18px; font-family: Inter; font-weight: 600; line-height: 26px; word-wrap: break-word">$1.75</div>
-              <div style="left: 184px; top: 54px; position: absolute; color: #426B1F; font-size: 18px; font-family: Inter; font-weight: 600; line-height: 26px; word-wrap: break-word">$1.75</div>
-              <div style="padding-top: 4px; padding-bottom: 4px; padding-left: 16px; padding-right: 8px; left: 184px; top: 95px; position: absolute; background: white; border-radius: 18px; overflow: hidden; border: 2px rgba(0, 0, 0, 0.06) solid; justify-content: flex-end; align-items: center; gap: 64px; display: inline-flex">
-                  <div style="color: black; font-size: 16px; font-family: Inter; font-weight: 600; line-height: 20.80px; word-wrap: break-word">1</div>
-                  <div style="width: 18px; height: 18px; position: relative; flex-direction: column; justify-content: flex-start; align-items: flex-start; display: flex">
-                      <img style="width: 16.50px; height: 16.50px" src="https://via.placeholder.com/16x16" />
-                  </div>
-              </div>
-              <img style="width: 163.62px; height: 160px; left: -6px; top: 0px; position: absolute" src="../../vendingmachine/static\images\thumbs\hotcheetos.jpg" />
-          </div>
-          <div style="width: 832px; height: 159px; left: 96px; top: 491px; position: absolute; background: #FAFAF5; border-radius: 18px; overflow: hidden; border: 2px #E6E6E6 solid">
-              <div style="left: 184px; top: 18px; position: absolute; color: black; font-size: 18px; font-family: Inter; font-weight: 600; line-height: 26px; word-wrap: break-word">Reese’s Peanut Butter Cups</div>
-              <div style="left: 184px; top: 54px; position: absolute; color: #426B1F; font-size: 18px; font-family: Inter; font-weight: 600; line-height: 26px; word-wrap: break-word">$1.75</div>
-              <div style="padding-top: 4px; padding-bottom: 4px; padding-left: 16px; padding-right: 8px; left: 184px; top: 95px; position: absolute; background: white; border-radius: 18px; overflow: hidden; border: 2px rgba(0, 0, 0, 0.06) solid; justify-content: flex-end; align-items: center; gap: 64px; display: inline-flex">
-                  <div style="color: black; font-size: 16px; font-family: Inter; font-weight: 700; line-height: 20.80px; word-wrap: break-word">1</div>
-                  <div style="width: 18px; height: 18px; position: relative; flex-direction: column; justify-content: flex-start; align-items: flex-start; display: flex">
-                      <img style="width: 16.50px; height: 16.50px" src="https://via.placeholder.com/16x16" />
-                  </div>
-              </div>
-              <div style="left: 756px; top: 18px; position: absolute; text-align: right; color: black; font-size: 18px; font-family: Inter; font-weight: 600; line-height: 26px; word-wrap: break-word">$1.75</div>
-              <img style="width: 164px; height: 164px; left: 0px; top: 0px; position: absolute" src="../../vendingmachine/static\images\thumbs\reeses.png" />
-          </div>
-          <div style="width: 832px; height: 159px; left: 96px; top: 681px; position: absolute; background: #FAFAF5; border-radius: 18px; overflow: hidden; border: 2px #E6E6E6 solid">
-              <div style="left: 184px; top: 18px; position: absolute; color: black; font-size: 18px; font-family: Inter; font-weight: 600; line-height: 26px; word-wrap: break-word">Funyuns</div>
-              <div style="left: 184px; top: 54px; position: absolute; color: #426B1F; font-size: 18px; font-family: Inter; font-weight: 600; line-height: 26px; word-wrap: break-word">$1.75</div>
-              <div style="padding-top: 4px; padding-bottom: 4px; padding-left: 16px; padding-right: 8px; left: 184px; top: 95px; position: absolute; background: white; border-radius: 18px; overflow: hidden; border: 2px rgba(0, 0, 0, 0.06) solid; justify-content: flex-end; align-items: center; gap: 64px; display: inline-flex">
-                  <div style="color: black; font-size: 16px; font-family: Inter; font-weight: 700; line-height: 20.80px; word-wrap: break-word">1</div>
-                  <div style="width: 18px; height: 18px; position: relative; flex-direction: column; justify-content: flex-start; align-items: flex-start; display: flex">
-                      <img style="width: 16.50px; height: 16.50px" src="https://via.placeholder.com/16x16" />
-                  </div>
-              </div>
-              <div style="left: 756px; top: 18px; position: absolute; text-align: right; color: black; font-size: 18px; font-family: Inter; font-weight: 600; line-height: 26px; word-wrap: break-word">$1.75</div>
-              <img style="width: 158px; height: 159px; left: 0px; top: 0px; position: absolute" src="../../vendingmachine/static\images\thumbs\funyuns.png" />
-          </div>
-          <div style="width: 400px; height: 318px; left: 960px; top: 301px; position: absolute; background: #FAFAF5; border-radius: 18px; overflow: hidden; border: 2px #E6E6E6 solid">
-              <div style="left: 18px; top: 18px; position: absolute; color: black; font-size: 18px; font-family: Inter; font-weight: 600; line-height: 26px; word-wrap: break-word">Order summary</div>
-              <div style="left: 18px; top: 94px; position: absolute; color: black; font-size: 16px; font-family: Inter; font-weight: 600; line-height: 20.80px; word-wrap: break-word">Total</div>
-              <div style="left: 336px; top: 94px; position: absolute; text-align: right; color: black; font-size: 16px; font-family: Inter; font-weight: 600; line-height: 20.80px; word-wrap: break-word">$5.25</div>
-              <div style="padding-top: 8px; padding-bottom: 8px; padding-left: 18px; padding-right: 16px; left: 18px; top: 246px; position: absolute; background: #426B1F; border-radius: 8px; overflow: hidden; justify-content: flex-end; align-items: center; gap: 168px; display: inline-flex">
-                  <div style="color: white; font-size: 16px; font-family: Inter; font-weight: 600; line-height: 20.80px; word-wrap: break-word">Cash Payment</div>
-                  <div style="width: 18px; height: 18px; position: relative; flex-direction: column; justify-content: flex-start; align-items: flex-start; display: flex">
-                      <div style="width: 16px; height: 12px; border: 1px white solid"></div>
-                  </div>
-              </div>
-              <div style="padding-top: 8px; padding-bottom: 8px; padding-left: 18px; padding-right: 16px; left: 18px; top: 159px; position: absolute; background: #426B1F; border-radius: 8px; overflow: hidden; justify-content: flex-end; align-items: center; gap: 170px; display: inline-flex">
-                  <div style="color: white; font-size: 16px; font-family: Inter; font-weight: 600; line-height: 20.80px; word-wrap: break-word">Card Payment</div>
-                  <div style="width: 18px; height: 18px; position: relative; flex-direction: column; justify-content: flex-start; align-items: flex-start; display: flex">
-                      <div style="width: 16px; height: 12px; border: 1px white solid"></div>
-                  </div>
-              </div>
-          </div>
-          <div style="width: 1456px; height: 149px; left: 0px; top: 112px; position: absolute; background: white">
-              <div style="left: 301px; top: 90px; position: absolute; color: black; font-size: 18px; font-family: Inter; font-weight: 300; line-height: 26px; word-wrap: break-word">3 items</div>
-              <div style="left: 96px; top: 56px; position: absolute; color: black; font-size: 64px; font-family: Newsreader; font-weight: 400; line-height: 76.80px; word-wrap: break-word">Cart</div>
-              <div style="width: 1264px; height: 0px; left: 96px; top: 149px; position: absolute; box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25); border: 2px #E6E6E6 solid"></div>
-          </div>
-          <div style="width: 1456px; height: 112px; left: 0px; top: 0px; position: absolute"></div>
-      </div>
-      <div style="width: 238px; height: 262px; left: 601px; top: 1280px; position: absolute">
-          <div style="width: 96px; height: 46px; left: 87px; top: 281px; position: absolute; color: black; font-size: 18px; font-family: Newsreader; font-weight: 500; line-height: 18px; word-wrap: break-word">Snickers $1.75</div>
-          <img style="width: 238px; height: 262px; left: 0px; top: 0px; position: absolute" src="../../vendingmachine/static\images\thumbs\snickers.png" />
-      </div>
-      <div style="left: 1058px; top: 929px; position: absolute; flex-direction: column; justify-content: flex-end; align-items: center; gap: 18px; display: inline-flex">
-          <img style="width: 238px; height: 262px" src="../../vendingmachine/static\images\thumbs\reeses.png" />
-          <div style="width: 96px; height: 46px; color: black; font-size: 18px; font-family: Newsreader; font-weight: 500; line-height: 18px; word-wrap: break-word">Reese's $1.75</div>
-      </div>
-      <div style="left: 745px; top: 929px; position: absolute; flex-direction: column; justify-content: flex-end; align-items: center; gap: 18px; display: inline-flex">
-          <img style="width: 238px; height: 262px" src="../../vendingmachine/static\images\thumbs\oreo.png" />
-          <div style="width: 96px; height: 46px; color: black; font-size: 18px; font-family: Newsreader; font-weight: 500; line-height: 18px; word-wrap: break-word">Oreos $1.75</div>
-      </div>
-      <div style="width: 238px; height: 262px; left: 432px; top: 929px; position: absolute">
-          <div style="width: 96px; height: 46px; left: 86px; top: 284px; position: absolute; color: black; font-size: 18px; font-family: Newsreader; font-weight: 500; line-height: 18px; word-wrap: break-word">Nature Valley $1.75</div>
-          <img style="width: 238px; height: 262px; left: 0px; top: 0px; position: absolute" src="../../vendingmachine/static\images\thumbs\nature_valley.png" />
-      </div>
-      <div style="left: 119px; top: 929px; position: absolute; flex-direction: column; justify-content: flex-end; align-items: center; gap: 21px; display: inline-flex">
-          <img style="width: 238px; height: 262px" src="../../vendingmachine/static\images\thumbs\mm.png" />
-          <div style="width: 96px; height: 46px; color: black; font-size: 18px; font-family: Newsreader; font-weight: 500; line-height: 18px; word-wrap: break-word">M&Ms $1.75</div>
-      </div>
-      <div style="left: 1058px; top: 578px; position: absolute; flex-direction: column; justify-content: flex-end; align-items: center; gap: 18px; display: inline-flex">
-          <img style="width: 238px; height: 262px" src="../../vendingmachine/static\images\thumbs\lays.png" />
-          <div style="width: 96px; height: 46px; color: black; font-size: 18px; font-family: Newsreader; font-weight: 500; line-height: 18px; word-wrap: break-word">Lay's $1.75</div>
-      </div>
-      <div style="left: 745px; top: 578px; position: absolute; flex-direction: column; justify-content: flex-end; align-items: center; gap: 22px; display: inline-flex">
-          <img style="width: 238px; height: 262px" src="../../vendingmachine/static\images\thumbs\hotcheetos.jpg" />
-          <div style="width: 96px; height: 46px; color: black; font-size: 18px; font-family: Newsreader; font-weight: 500; line-height: 18px; word-wrap: break-word">Flamin' Hot Cheetos $1.75</div>
-      </div>
-      <div style="left: 432px; top: 578px; position: absolute; flex-direction: column; justify-content: flex-end; align-items: center; gap: 23px; display: inline-flex">
-          <img style="width: 238px; height: 262px" src="../../vendingmachine/static\images\thumbs\goldfish.png" />
-          <div style="width: 96px; height: 46px; color: black; font-size: 18px; font-family: Newsreader; font-weight: 500; line-height: 18px; word-wrap: break-word">Goldfish $1.75</div>
-      </div>
-      <div style="left: 119px; top: 578px; position: absolute; flex-direction: column; justify-content: flex-end; align-items: center; gap: 22px; display: inline-flex">
-          <img style="width: 238px; height: 262px" src="../../vendingmachine/static\images\thumbs\funyuns.png" />
-          <div style="width: 96px; height: 46px; color: black; font-size: 18px; font-family: Newsreader; font-weight: 500; line-height: 18px; word-wrap: break-word">Funyuns $1.75</div>
-      </div>
-      <div style="left: 1058px; top: 227px; position: absolute; flex-direction: column; justify-content: flex-end; align-items: center; gap: 18px; display: inline-flex">
-          <img style="width: 238px; height: 262px" src="../../vendingmachine/static\images\thumbs\doritos.png" />
-          <div style="width: 96px; height: 46px; color: black; font-size: 18px; font-family: Newsreader; font-weight: 500; line-height: 18px; word-wrap: break-word">Doritos $1.75</div>
-      </div>
-      <div style="left: 745px; top: 227px; position: absolute; flex-direction: column; justify-content: flex-end; align-items: center; gap: 23px; display: inline-flex">
-          <img style="width: 238px; height: 262px" src="../../vendingmachine/static\images\thumbs\chips_ahoy.png" />
-          <div style="width: 96px; height: 46px; color: black; font-size: 18px; font-family: Newsreader; font-weight: 500; line-height: 18px; word-wrap: break-word">Chips Ahoy! $1.75</div>
-      </div>
-      <div style="left: 432px; top: 227px; position: absolute; flex-direction: column; justify-content: flex-end; align-items: center; gap: 21px; display: inline-flex">
-          <img style="width: 238px; height: 262px" src="../../vendingmachine/static\images\thumbs\cheeto.png" />
-          <div style="width: 96px; height: 46px; color: black; font-size: 18px; font-family: Newsreader; font-weight: 500; line-height: 18px; word-wrap: break-word">Cheetos $1.75</div>
-      </div>
-      <div style="left: 119px; top: 227px; position: absolute; flex-direction: column; justify-content: flex-end; align-items: center; gap: 22px; display: inline-flex">
-          <img style="width: 238px; height: 262px" src="../../vendingmachine/static\images\thumbs\beef_jerky.png" />
-          <div style="width: 96px; height: 46px; color: black; font-size: 18px; font-family: Newsreader; font-weight: 500; line-height: 18px; word-wrap: break-word">Beef Jerky $1.75</div>
-      </div>
-      <div style="width: 1440px; height: 112px; left: 16px; top: 59px; position: absolute">
-          <div style="left: 96px; top: 41px; position: absolute; color: #426B1F; font-size: 18px; font-family: Newsreader; font-weight: 500; line-height: 18px; word-wrap: break-word">Vending Machine</div>
-          <div style="left: 741px; top: 45.50px; position: absolute; text-align: center; color: black; font-size: 16px; font-family: Inter; font-weight: 700; line-height: 20.80px; word-wrap: break-word">Menu</div>
-          <div style="left: 911px; top: 46px; position: absolute; text-align: center; color: black; font-size: 16px; font-family: Inter; font-weight: 400; line-height: 20.80px; word-wrap: break-word">Cart Checkout</div>
-          <div style="width: 126px; height: 48px; left: 1218px; top: 18px; position: absolute; background: #426B1F; border-radius: 8px; overflow: hidden">
-              <div style="left: 18px; top: 13.50px; position: absolute; text-align: center; color: white; font-size: 16px; font-family: Inter; font-weight: 600; line-height: 20.80px; word-wrap: break-word">Cart (0)</div>
-              <div style="padding-top: 13.50px; padding-bottom: 13.50px; padding-left: 33px; padding-right: 18px; left: 0px; top: 0px; position: absolute; background: #426B1F; border-radius: 4px; overflow: hidden; justify-content: center; align-items: center; display: inline-flex">
-                  <div style="text-align: center; color: white; font-size: 16px; font-family: Inter; font-weight: 600; line-height: 20.80px; word-wrap: break-word">Cart (3)</div>
-              </div>
-          </div>
-      </div>
-  </div>
-
--->
   <script src="../../vendingmachine/static/assets/js/jquery.min.js"></script>
   <script src="../../vendingmachine/static/assets/js/jquery.poptrox.min.js"></script>
   <script src="../../vendingmachine/static/assets/js/browser.min.js"></script>
