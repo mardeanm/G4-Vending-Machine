@@ -51,7 +51,7 @@
         <div class="item" onclick="addToCart('Goldfish', 1.5)">
             <br>Goldfish<br>$1.50
         </div>
-        <br><div class="item" onclick="addToCart('Flamin Hot Cheetos', 5.5)">
+        <br><div class="item" onclick="addToCart('Flamin Hot Cheetos', 1.5)">
             <br>Flaming Hot Cheetos<br>$1.50
         </div>
         <div class="item" onclick="addToCart('Lays', 1.5)">
@@ -84,6 +84,23 @@
         <button onclick="checkout()">Checkout</button>
     </div>
 
+
+    <h1>Card Payment</h1>
+
+    <div id="payment-form">
+        <label for="card-number">Card Number:</label>
+        <input type="text" id="card-number" placeholder="Card Number">
+
+        <label for="expiry-date">Expiry Date:</label>
+        <input type="text" id="expiry-date" placeholder="MM/YY">
+
+        <label for="cvv">CVV:</label>
+        <input type="text" id="cvv" placeholder="CVV">
+
+        <button onclick="processPayment()">Pay Now</button>
+    </div>
+
+
     <script>
         var cartItems = [];
         var total = 0;
@@ -114,6 +131,50 @@
             totalElement.textContent = total.toFixed(2);
         }
 
+        function processPayment() {
+            function processPayment() {
+            // Gather card details
+            var cardNumber = document.getElementById('card-number').value;
+            var expiryDate = document.getElementById('expiry-date').value;
+            var cvv = document.getElementById('cvv').value;
+
+            // Validate card details (you may want to add more robust validation)
+            if (!cardNumber || !expiryDate || !cvv) {
+                alert('Please fill in all card details.');
+                return;
+            }
+
+            // Send card details to the backend for processing
+            // This is where you would make an AJAX request to your server-side endpoint
+            // Replace '/process_payment' with the actual URL of your backend endpoint
+            fetch('/process_payment', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    cardNumber: cardNumber,
+                    expiryDate: expiryDate,
+                    cvv: cvv,
+                }),
+            })
+            .then(response => response.json())
+            .then(data => {
+                // Handle the response from the backend
+                if (data.success) {
+                    alert('Payment successful!');
+
+                } else {
+                    alert('Payment failed. Please try again.');
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                alert('An error occurred. Please try again.');
+            });
+        }
+        }
+
         function checkout() {
             // Implement payment processing logic here
             alert('Checkout completed. Total amount: $' + total.toFixed(2));
@@ -124,6 +185,23 @@
 
             // Update the cart display
             updateCartDisplay();
+            var paymentMethod = prompt("Enter payment method (cash or card):").toLowerCase();
+
+            if (paymentMethod === "cash") {
+                var cashAmount = parseFloat(prompt("Enter cash amount:"));
+                if (cashAmount >= total) {
+                    alert(`Payment successful! Change: $${(cashAmount - total).toFixed(2)}`);
+                    resetCart();
+                } else {
+                    alert("Insufficient cash. Please enter the correct amount.");
+                }
+            } else if (paymentMethod === "card") {
+                // Implement card payment logic (requires server-side processing and payment gateway)
+                alert("Please fill out your card information below.");
+
+            } else {
+                alert("Invalid payment method. Please enter 'cash' or 'card'.");
+            }
         }
     </script>
 
