@@ -150,7 +150,7 @@
         var cartItems = [];
         var total = 0;
 
-
+        // Display Cart items as they are selected
         function displayCart() {
             var cartItemsElement = document.getElementById('cart-items');
             var totalElement = document.getElementById('total');
@@ -168,6 +168,7 @@
             totalElement.textContent = total.toFixed(2);
         }
 
+        // Add items to the cart
         function addToCart(itemName, itemPrice) {
             cartItems.push({ name: itemName, price: itemPrice });
             total += itemPrice;
@@ -176,6 +177,7 @@
             updateCartDisplay();
         }
 
+        // Remove items from the cart
         function removeItem(index) {
             if (index >= 0 && index < cartItems.length) {
                 total -= cartItems[index].price; // Subtract the price of the removed item
@@ -185,6 +187,7 @@
             }
         }
 
+        // Display updated cart after making changes
         function updateCartDisplay() {
             var cartItemsElement = document.getElementById('cart-items');
             var totalElement = document.getElementById('total');
@@ -203,6 +206,7 @@
             totalElement.textContent = total.toFixed(2);
         }
 
+        // Process payment via card or cash
         function processPayment() {
 
             // Gather card details
@@ -226,7 +230,7 @@
             }
 
             // Send card details to the backend for processing
-            //  make an AJAX request to server-side endpoint
+            // make an AJAX request to server-side endpoint
             fetch('/app.py', {
                 method: 'POST',
                 headers: {
@@ -259,8 +263,8 @@
             alert('Checkout completed. Total amount: $' + total.toFixed(2));
 
             // Clear the cart after checkout
-            cartItems = [];
-            total = 0;
+            //cartItems = [];
+            //total = 0.00;
 
             // Update the cart display
             updateCartDisplay();
@@ -268,11 +272,12 @@
 
             if (paymentMethod === "cash") {
                 var cashAmount = parseFloat(prompt("Enter cash amount:"));
-                if (cashAmount === total){
-                    alert("Payment successful!");
-                }
-                else if (cashAmount > total) {
-                    var change = cashAmount - total
+                //if (cashAmount === total){
+                    //alert("Payment successful!");
+                //}
+                if (cashAmount >= total) {
+                    var change = cashAmount - total;
+                    //total = change.toFixed(2);
                     alert(`Payment successful! Change: $${change.toFixed(2)}`);
                     resetCart();
                 } else {
