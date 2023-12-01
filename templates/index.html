@@ -5,7 +5,129 @@
 	Free for personal and commercial use under the CCA 3.0 license (html5up.net/license)
 -->
 <html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vending Machine App</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+        }
 
+        .item {
+            display: inline-block;
+            margin: 20px;
+            padding: 20px;
+            border: 1px solid #ccc;
+            text-align: center;
+        }
+
+        .cart {
+            margin-top: 20px;
+            border: 1px solid #ccc;
+            padding: 10px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Vending Machine</h1>
+
+    <div id="items">
+        <div class="item" onclick="addToCart('Beef Jerky', 1.5)">
+            <br>Beef Jerky<br>$1.50
+        </div>
+        <div class="item" onclick="addToCart('Cheetos', 1.5)">
+            <br>Cheetos<br>$1.50
+        </div>
+        <div class="item" onclick="addToCart('Chips Ahoy', 1.5)">
+            <br>Chips Ahoy<br>$1.50
+        </div>
+        <br><div class="item" onclick="addToCart('Doritos', 1.5)">
+            <br>Doritos<br>$1.50
+        </div>
+        <div class="item" onclick="addToCart('Funyuns', 1.5)">
+            <br>Funyuns<br>$1.50
+        </div>
+        <div class="item" onclick="addToCart('Goldfish', 1.5)">
+            <br>Goldfish<br>$1.50
+        </div>
+        <br><div class="item" onclick="addToCart('Flamin Hot Cheetos', 5.5)">
+            <br>Flaming Hot Cheetos<br>$1.50
+        </div>
+        <div class="item" onclick="addToCart('Lays', 1.5)">
+            <br>Lays<br>$1.50
+        </div>
+        <div class="item" onclick="addToCart('M&Ms', 1.5)">
+            <br>M&Ms<br>$1.50
+        </div>
+       <br><div class="item" onclick="addToCart('Nature Valley', 1.5)">
+            <br>Nature Valley<br>$1.50
+        </div>
+        <div class="item" onclick="addToCart('Oreos', 1.5)">
+            <br>Oreos<br>$1.50
+        </div>
+        <div class="item" onclick="addToCart('Reeses', 1.5)">
+            <br>Reeses<br>$1.50
+        </div>
+        <br><div class="item" onclick="addToCart('Snickers', 1.5)">
+            <br>Snickers<br>$1.50
+        </div>
+
+
+        <!-- Add more items as needed -->
+    </div>
+
+    <div id="cart" class="cart">
+        <h2>Shopping Cart</h2>
+        <ul id="cart-items"></ul>
+        <p>Total: $<span id="total">0.00</span></p>
+        <button onclick="checkout()">Checkout</button>
+    </div>
+
+    <script>
+        var cartItems = [];
+        var total = 0;
+
+        function addToCart(itemName, itemPrice) {
+            cartItems.push({ name: itemName, price: itemPrice });
+            total += itemPrice;
+
+            // Update the cart display
+            updateCartDisplay();
+        }
+
+        function updateCartDisplay() {
+            var cartItemsElement = document.getElementById('cart-items');
+            var totalElement = document.getElementById('total');
+
+            // Clear previous items
+            cartItemsElement.innerHTML = '';
+
+            // Populate the cart items
+            cartItems.forEach(function (item) {
+                var listItem = document.createElement('li');
+                listItem.textContent = `${item.name} - $${item.price.toFixed(2)}`;
+                cartItemsElement.appendChild(listItem);
+            });
+
+            // Update total
+            totalElement.textContent = total.toFixed(2);
+        }
+
+        function checkout() {
+            // Implement payment processing logic here
+            alert('Checkout completed. Total amount: $' + total.toFixed(2));
+
+            // Clear the cart after checkout
+            cartItems = [];
+            total = 0;
+
+            // Update the cart display
+            updateCartDisplay();
+        }
+    </script>
+
+<!--
 <body>
   <div style="width: 100%; height: 100%; position: relative">
       <div style="width: 1456px; height: 1892px; left: 0px; top: 0px; position: absolute; background: #FDFDFD"></div>
@@ -135,7 +257,7 @@
       </div>
   </div>
 
-
+-->
   <script src="../../vendingmachine/static/assets/js/jquery.min.js"></script>
   <script src="../../vendingmachine/static/assets/js/jquery.poptrox.min.js"></script>
   <script src="../../vendingmachine/static/assets/js/browser.min.js"></script>
