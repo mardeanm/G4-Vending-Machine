@@ -34,53 +34,75 @@
 
     <div id="items">
         <div class="item" onclick="addToCart('Beef Jerky', 1.5)">
-            <br>Beef Jerky<br>$1.50
+            <br>Beef Jerky
+            <button onclick="removeItem('Beef Jerky')">-</button>
+            <br>$1.50
         </div>
         <div class="item" onclick="addToCart('Cheetos', 1.5)">
-            <br>Cheetos<br>$1.50
+            <br>Cheetos
+            <button onclick="removeItem('Cheetos')">-</button>
+            <br>$1.50
         </div>
         <div class="item" onclick="addToCart('Chips Ahoy', 1.5)">
-            <br>Chips Ahoy<br>$1.50
+            <br>Chips Ahoy
+            <button onclick="removeItem('Chips Ahoy')">-</button>
+            <br>$1.50
         </div>
         <br><div class="item" onclick="addToCart('Doritos', 1.5)">
-            <br>Doritos<br>$1.50
+            <br>Doritos
+            <button onclick="removeItem('Doritos')">-</button>
+            <br>$1.50
         </div>
         <div class="item" onclick="addToCart('Funyuns', 1.5)">
-            <br>Funyuns<br>$1.50
+            <br>Funyuns
+            <button onclick="removeItem('Funyuns')">-</button><br>$1.50
         </div>
         <div class="item" onclick="addToCart('Goldfish', 1.5)">
-            <br>Goldfish<br>$1.50
+            <br>Goldfish
+            <button onclick="removeItem('Goldfish')">-</button><br>$1.50
         </div>
         <br><div class="item" onclick="addToCart('Flamin Hot Cheetos', 1.5)">
-            <br>Flaming Hot Cheetos<br>$1.50
+            <br>Flaming Hot Cheetos
+            <button onclick="removeItem('Flamin Hot Cheetos')">-</button>
+            <br>$1.50
         </div>
         <div class="item" onclick="addToCart('Lays', 1.5)">
-            <br>Lays<br>$1.50
+            <br>Lays
+            <button onclick="removeItem('Lays')">-</button>
+            <br>$1.50
         </div>
         <div class="item" onclick="addToCart('M&Ms', 1.5)">
-            <br>M&Ms<br>$1.50
+            <br>M&Ms
+            <button onclick="removeItem('M&Ms')">-</button>
+            <br>$1.50
         </div>
        <br><div class="item" onclick="addToCart('Nature Valley', 1.5)">
-            <br>Nature Valley<br>$1.50
+            <br>Nature Valley
+            <button onclick="removeItem('Nature Valley')">-</button>
+            <br>$1.50
         </div>
         <div class="item" onclick="addToCart('Oreos', 1.5)">
-            <br>Oreos<br>$1.50
+            <br>Oreos
+            <button onclick="removeItem('Oreos')">-</button>
+            <br>$1.50
         </div>
         <div class="item" onclick="addToCart('Reeses', 1.5)">
-            <br>Reeses<br>$1.50
+            <br>Reeses
+            <button onclick="removeItem('Reeses')">-</button>
+            <br>$1.50
         </div>
         <br><div class="item" onclick="addToCart('Snickers', 1.5)">
-            <br>Snickers<br>$1.50
+            <br>Snickers
+            <button onclick="removeItem('Snickers')">-</button><br>$1.50
         </div>
 
-
-        <!-- Add more items as needed -->
     </div>
 
     <div id="cart" class="cart">
         <h2>Shopping Cart</h2>
         <ul id="cart-items"></ul>
         <p>Total: $<span id="total">0.00</span></p>
+
         <button onclick="checkout()">Checkout</button>
     </div>
 
@@ -113,6 +135,14 @@
             updateCartDisplay();
         }
 
+        function removeItem(index) {
+            if (index >= 0 && index < cartItems.length) {
+                total -= cartItems[index].price; // Subtract the price of the removed item
+                cartItems.splice(index, 1);
+                displayCart();
+            }
+        }
+
         function updateCartDisplay() {
             var cartItemsElement = document.getElementById('cart-items');
             var totalElement = document.getElementById('total');
@@ -135,13 +165,22 @@
             function processPayment() {
             // Gather card details
             var cardNumber = document.getElementById('card-number').value;
+            var cardLength = 16;
             var expiryDate = document.getElementById('expiry-date').value;
+            var exDateLength = 4;
             var cvv = document.getElementById('cvv').value;
+            var cvvLength = 3;
 
             // Validate card details (you may want to add more robust validation)
             if (!cardNumber || !expiryDate || !cvv) {
                 alert('Please fill in all card details.');
                 return;
+            }
+            if (cardNumber.length !== cardLength || expiryDate.length !== exDateLength || cvv.length !== cvvLength){
+                alert("Card declined: invalid card number, cvv, or expiry date");
+            }
+            else{
+                alert("Payment accepted!");
             }
 
             // Send card details to the backend for processing
@@ -189,8 +228,12 @@
 
             if (paymentMethod === "cash") {
                 var cashAmount = parseFloat(prompt("Enter cash amount:"));
-                if (cashAmount >= total) {
-                    alert(`Payment successful! Change: $${(cashAmount - total).toFixed(2)}`);
+                if (cashAmount === total){
+                    alert("Payment successful!");
+                }
+                else if (cashAmount > total) {
+                    var change = cashAmount - total
+                    alert(`Payment successful! Change: $${(change).toFixed(2)}`);
                     resetCart();
                 } else {
                     alert("Insufficient cash. Please enter the correct amount.");
