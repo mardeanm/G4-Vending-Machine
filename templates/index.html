@@ -45,75 +45,87 @@
             <br>Beef Jerky
             <br>$1.50
         </div>
-        <button onclick="removeItem('Beef Jerky')">-</button>
+        <!--<button onclick="removeItem('Beef Jerky')">-</button>-->
 
         <div class="item" onclick="addToCart('Cheetos', 1.5)">
             <br>Cheetos
             <br>$1.50
-        </div><button onclick="removeItem('Cheetos')">-</button>
+        </div>
+        <!--<button onclick="removeItem('Cheetos')">-</button>-->
 
         <div class="item" onclick="addToCart('Chips Ahoy', 1.5)">
             <br>Chips Ahoy
             <br>$1.50
-        </div><button onclick="removeItem('Chips Ahoy')">-</button>
+        </div>
+        <!--<button onclick="removeItem('Chips Ahoy')">-</button>-->
 
         <br><div class="item" onclick="addToCart('Doritos', 1.5)">
             <br>Doritos
             <br>$1.50
-        </div><button onclick="removeItem('Doritos')">-</button>
+        </div>
+        <!--<button onclick="removeItem('Doritos')">-</button>-->
 
         <div class="item" onclick="addToCart('Funyuns', 1.5)">
             <br>Funyuns
             <br>$1.50
-        </div><button onclick="removeItem('Funyuns')">-</button>
+        </div>
+        <!--<button onclick="removeItem('Funyuns')">-</button>-->
 
         <div class="item" onclick="addToCart('Goldfish', 1.5)">
             <br>Goldfish
             <br>$1.50
-        </div><button onclick="removeItem('Goldfish')">-</button>
+        </div>
+        <!--<button onclick="removeItem('Goldfish')">-</button>-->
 
         <br><div class="item" onclick="addToCart('Flamin Hot Cheetos', 1.5)">
             <br>Flaming Hot Cheetos
             <br>$1.50
-        </div><button onclick="removeItem('Flamin Hot Cheetos')">-</button>
+        </div>
+        <!--<button onclick="removeItem('Flamin Hot Cheetos')">-</button>-->
 
         <div class="item" onclick="addToCart('Lays', 1.5)">
             <br>Lays
             <br>$1.50
-        </div><button onclick="removeItem('Lays')">-</button>
+        </div>
+        <!--<button onclick="removeItem('Lays')">-</button>-->
 
         <div class="item" onclick="addToCart('M&Ms', 1.5)">
             <br>M&Ms
             <br>$1.50
-        </div><button onclick="removeItem('M&Ms')">-</button>
+        </div>
+        <!--<button onclick="removeItem('M&Ms')">-</button>-->
 
        <br><div class="item" onclick="addToCart('Nature Valley', 1.5)">
             <br>Nature Valley
             <br>$1.50
-        </div><button onclick="removeItem('Nature Valley')">-</button>
+        </div>
+        <!--<button onclick="removeItem('Nature Valley')">-</button>-->
 
         <div class="item" onclick="addToCart('Oreos', 1.5)">
             <br>Oreos
             <br>$1.50
-        </div><button onclick="removeItem('Oreos')">-</button>
+        </div>
+        <!--<button onclick="removeItem('Oreos')">-</button>-->
 
         <div class="item" onclick="addToCart('Reeses', 1.5)">
             <br>Reeses
             <br>$1.50
-        </div><button onclick="removeItem('Reeses')">-</button>
+        </div>
+        <!--<button onclick="removeItem('Reeses')">-</button>-->
 
         <br><div class="item" onclick="addToCart('Snickers', 1.5)">
             <br>Snickers
             <br>$1.50
-        </div><button onclick="removeItem('Snickers')">-</button>
+        </div>
+        <!--<button onclick="removeItem('Snickers')">-</button>-->
 
     </div>
 
     <div id="cart" class="cart">
         <h2>Shopping Cart</h2>
         <ul id="cart-items"></ul>
+        <button onclick="removeItem(${index})">-</button>
         <p>Total: $<span id="total">0.00</span></p>
-
         <button onclick="checkout()">Checkout</button>
     </div>
 
@@ -138,6 +150,24 @@
         var cartItems = [];
         var total = 0;
 
+
+        function displayCart() {
+            var cartItemsElement = document.getElementById('cart-items');
+            var totalElement = document.getElementById('total');
+            cartItemsElement.innerHTML = '';
+
+            cartItems.forEach(function (item, index) {
+                var listItem = document.createElement('li');
+                listItem.innerHTML = `
+                    <span>${item.name} - $${item.price.toFixed(2)}</span>
+                    <button onclick="removeItem(${index})">-</button>
+                `;
+                cartItemsElement.appendChild(listItem);
+            });
+
+            totalElement.textContent = total.toFixed(2);
+        }
+
         function addToCart(itemName, itemPrice) {
             cartItems.push({ name: itemName, price: itemPrice });
             total += itemPrice;
@@ -151,6 +181,7 @@
                 total -= cartItems[index].price; // Subtract the price of the removed item
                 cartItems.splice(index, 1);
                 displayCart();
+                updateCartDisplay();
             }
         }
 
