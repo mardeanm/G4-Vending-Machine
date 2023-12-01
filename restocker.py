@@ -2,7 +2,35 @@
 import sqlite3
 from flask import jsonify, request
 
+VM_ID=1
 
+def update_expiration_dates(db_path):
+
+# Connect to the SQLite database
+    conn = sqlite3.connect(db_path)
+    cur = conn.cursor()
+
+    # SQL to update the expiration date in the inventory table
+    # This assumes 'Purchase_date' is stored in a format that SQLite can perform date calculations on
+    # and 'shelf_life' is stored as an integer number of weeks in the items table.
+    update_sql = """
+    UPDATE Inventory  -- Make sure this matches the table name's case in the database
+    SET Expiration_Date = (
+        SELECT date(Stock_Date, '+' || (Items.Shelf_Life * 7) || ' days')
+        FROM Items
+        WHERE Items.Item_ID = Inventory.Item_ID
+    )
+    WHERE Inventory.Item_ID IN (SELECT Item_ID FROM Items)
+    """
+
+    # Execute the SQL command
+    cur.execute(update_sql)
+
+    # Commit the changes to the database
+    conn.commit()
+
+    # Close the connection
+    conn.close()
 def update_inventory(item_id, quantity):
     conn = sqlite3.connect('vending_machines_DB.sqlite.db')
     cur = conn.cursor()

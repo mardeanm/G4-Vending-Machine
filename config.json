@@ -1,0 +1,6 @@
+{
+    "host": "main-db.c11lj4x09ya8.us-east-2.rds.amazonaws.com",
+    "mysql_user": "admin",
+    "mysql_password": "vending4",
+    "database":"Vending-Machines"
+}

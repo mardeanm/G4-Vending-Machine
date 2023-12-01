@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" rel="stylesheet">
+  <!-- isotope js -->
+  <script src="https://unpkg.com/isotope-layout@3.0.4/dist/isotope.pkgd.min.js"></script>
+      <!-- jQery -->
+  <script src="../static/assets/js/jquery-3.4.1.min.js"></script>
+  <!-- Basic -->
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <!-- Mobile Metas -->
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+  <!-- Site Metas -->
+  <meta name="keywords" content="" />
+  <meta name="description" content="" />
+  <meta name="author" content="" />
+  <link rel="shortcut icon" href="../static/images/imagesnew/5853892.png" type="">
+
+  <title> Checkout </title>
+
+  <!-- bootstrap core css -->
+  <link rel="stylesheet" type="text/css" href="../static/assets/css/bootstrap.css" />
+
+  <!--owl slider stylesheet -->
+  <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/assets/owl.carousel.min.css" />
+  <!-- nice select  -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jquery-nice-select/1.1.0/css/nice-select.min.css" integrity="sha512-CruCP+TD3yXzlvvijET8wV5WxxEh5H8P4cmz0RFbKK6FlZ2sYl3AEsKlLPHbniXKSrDdFewhbmBK5skbdsASbQ==" crossorigin="anonymous" />
+  <!-- font awesome style -->
+  <link href="../static/assets/css/font-awesome.min.css" rel="stylesheet" />
+  <!-- Custom styles for this template -->
+  <link href="../static/assets/css/style1.css" rel="stylesheet" />
+
+  <!-- responsive style -->
+  <link href="../static/assets/css/responsive.css" rel="stylesheet" />
+
+</head>
+<body>
+  <div class="hero_area">
+{#    <div class="bg-box">#}
+{#      <img src="../static/images/imagesnew/wallpaper.jpg" alt="">#}
+{#    </div>#}
+    <!-- header section strats -->
+    <header class="header_section">
+      <div class="container">
+        <nav class="navbar navbar-expand-lg custom_nav-container ">
+
+           <span class="navbar-brand">
+                <span>
+                  G4 Vending Machine
+                </span>
+            </span>
+
+          <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+            <span class=""> </span>
+          </button>
+
+          <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <ul class="navbar-nav  mx-auto ">
+              <li class="nav-item active">
+                <a class="nav-link" href="/">Home <span class="sr-only">(current)</span></a>
+
+              </li>
+
+            </ul>
+            <div class="user_option">
+
+
+
+
+
+              </form>
+              <a href="#" class="order_online">
+                Check Out
+                <span id="cart-count">0</span> <!-- This will display the cart count -->
+              </a>
+            </div>
+          </div>
+        </nav>
+      </div>
+    </header>
+
+  </div>
+
+
+  </div>
+    </header>
+
+    <div class="checkout-container">
+     <h2 class="checkout-title">Checkout</h2>
+    {% if cart.items %}
+        <!-- List Cart Items -->
+        {% for item_id, item in cart.items.items() %}
+        <div class="cart-item">
+             <button class="remove-item-btn" data-item-id="{{ item_id }}">
+                <i class="fas fa-times"></i>
+            </button>
+           <span>{{ items[item_id]['name'].strip('"') }}</span>
+            <span>Quantity: {{ item['quantity'] }}</span>
+            <span>Price: ${{ "%.2f"|format(item['price']) }}</span>
+        </div>
+        {% endfor %}
+
+        <!-- Display Total with Sales Tax -->
+        <hr>
+        <div class="total">
+            <span>Total (incl. tax): ${{ "%.2f"|format(cart.calculate_total() * 1.075) }}</span> <!-- Assuming 7.5% sales tax -->
+        </div>
+
+        <!-- Payment Buttons -->
+        <div class="payment-buttons">
+            <button id="cancel-order">Cancel Order</button>
+            <button id="pay-with-cash">Pay with Cash</button>
+            <button id="pay-with-card">Pay with Card</button>
+        </div>
+    <div id="cash-payment-input" style="display: none;">
+        <input type="number" id="cash-amount" placeholder="Enter cash amount">
+        <button id="confirm-cash-payment">Confirm Payment</button>
+    </div>
+      {% else %}
+        <div class="empty-cart-message">
+            Your cart is empty.
+        </div>
+    {% endif %}
+    </div>
+<script>
+   // Function to remove an item from the cart
+document.addEventListener('DOMContentLoaded', function() {
+    document.querySelectorAll('.remove-item-btn').forEach(button => {
+        button.addEventListener('click', function() {
+            var itemId = this.getAttribute('data-item-id');
+            fetch(`/remove_from_cart/${itemId}`, { method: 'POST' })
+                .then(response => response.json())
+                .then(data => {
+                    if(data.success) {
+                        // Refresh the page or update the cart display dynamically
+                        location.reload();
+                    }
+                });
+        });
+    });
+});
+
+// Event listener for the cancel order button
+document.getElementById('cancel-order').addEventListener('click', function() {
+    fetch('/cancel_order', {
+        method: 'POST'
+    })
+    .then(response => response.json())
+    .then(data => {
+        if(data.success) {
+            window.location.href = '/'; // Redirect to the main page
+        } else {
+            alert("Failed to cancel order");
+        }
+    })
+    .catch(error => console.error('Error:', error));
+});
+
+    // JavaScript to handle payment button clicks
+    document.getElementById('pay-with-cash').addEventListener('click', function() {
+        document.getElementById('cash-payment-input').style.display = 'block';
+    });
+
+    document.getElementById('confirm-cash-payment').addEventListener('click', function() {
+        var cashAmount = document.getElementById('cash-amount').value;
+        fetch('/pay_with_cash', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ inserted_amount: cashAmount })
+        })
+        .then(response => response.json())
+        .then(data => {
+            if(data.success) {
+                alert("Payment successful. Change: $" + data.change);
+                window.location.href = '/'; // Redirect to the main page
+            } else {
+                alert("Payment failed: " + data.message);
+            }
+        })
+        .catch(error => console.error('Error:', error));
+    });
+
+    document.getElementById('pay-with-card').addEventListener('click', function() {
+        // Prompt user for card details
+        var cardDetails = prompt("Please enter your card details:");
+        if (cardDetails) {
+            fetch('/pay_with_card', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ card_details: cardDetails })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if(data.success) {
+                    alert("Card payment successful");
+                    window.location.href = '/'; // Redirect to the main page
+                } else {
+                    alert("Card payment failed: " + data.message);
+                }
+            })
+            .catch(error => console.error('Error:', error));
+        }
+    });
+</script>
+
+</body>
+</html>

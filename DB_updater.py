@@ -2,22 +2,38 @@ import sqlite3
 import mysql.connector
 import json
 
-def transfer_table_data(sqlite_cursor, mysql_cursor, table_name, unique_field):
-    sqlite_cursor.execute(f"SELECT * FROM {table_name}")
-    rows = sqlite_cursor.fetchall()
-    for row in rows:
-        # Construct a query to check for duplicates
-        # Assuming the unique field is the first field in each row
-        check_query = f"SELECT * FROM {table_name} WHERE {unique_field} = %s"
-        mysql_cursor.execute(check_query, (row[0],))
+def transfer_inventory_data(sqlite_cursor, mysql_cursor, vm_id):
+    # Check and delete existing records for the given VM_ID in MySQL
+    mysql_cursor.execute("SELECT * FROM Inventory WHERE VM_ID = %s", (vm_id,))
+    mysql_records = mysql_cursor.fetchall()
 
-        if mysql_cursor.fetchone() is None:
-            # Construct a query to insert data
+    sqlite_cursor.execute("SELECT * FROM Inventory WHERE VM_ID = ?", (vm_id,))
+    sqlite_records = sqlite_cursor.fetchall()
+
+    if set(mysql_records) != set(sqlite_records):
+        mysql_cursor.execute("DELETE FROM Inventory WHERE VM_ID = %s", (vm_id,))
+
+        # Insert all records from SQLite
+        for row in sqlite_records:
             placeholders = ', '.join(['%s'] * len(row))
-            insert_query = f"INSERT INTO {table_name} VALUES ({placeholders})"
+            insert_query = f"INSERT INTO Inventory VALUES ({placeholders})"
             mysql_cursor.execute(insert_query, row)
 
-def transfer_data():
+def transfer_transaction_history(sqlite_cursor, mysql_cursor, vm_id):
+    # Find the latest transaction ID for the given VM_ID in MySQL
+    mysql_cursor.execute("SELECT MAX(Transaction_ID) FROM Transaction_History WHERE VM_ID = %s", (vm_id,))
+    max_transaction_id = mysql_cursor.fetchone()[0] or 0
+
+    # Transfer new transactions from SQLite
+    sqlite_cursor.execute("SELECT * FROM Transaction_History WHERE VM_ID = ? AND Transaction_ID > ?", (vm_id, max_transaction_id))
+    new_transactions = sqlite_cursor.fetchall()
+
+    for transaction in new_transactions:
+        placeholders = ', '.join(['%s'] * len(transaction))
+        insert_query = f"INSERT INTO Transaction_History VALUES ({placeholders})"
+        mysql_cursor.execute(insert_query, transaction)
+
+def transfer_data(vm_id):
     # Connect to SQLite
     sqlite_conn = sqlite3.connect('vending_machines_DB.sqlite.db')
     sqlite_cursor = sqlite_conn.cursor()
@@ -34,22 +50,11 @@ def transfer_data():
     )
     mysql_cursor = mysql_conn.cursor()
 
-    # Define your tables and their unique fields
-    tables = {
-        'VM': 'VM_ID',
-        'Inventory': 'Item_ID',  # Assuming Item_ID is unique in Inventory
-        'Transaction_History': 'Transaction_ID',  # Assuming Transaction_ID is unique
-        'Items': 'Item_ID'
-    }
-
-    # Transfer data for each table
-    for table_name, unique_field in tables.items():
-        transfer_table_data(sqlite_cursor, mysql_cursor, table_name, unique_field)
+    # Transfer data for Inventory and Transaction_History
+    transfer_inventory_data(sqlite_cursor, mysql_cursor, vm_id)
+    transfer_transaction_history(sqlite_cursor, mysql_cursor, vm_id)
 
     # Commit and close connections
     mysql_conn.commit()
     mysql_conn.close()
     sqlite_conn.close()
-
-# # Call the function to start transfer
-# transfer_data()

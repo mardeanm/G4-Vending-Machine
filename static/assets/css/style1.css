@@ -1,0 +1,435 @@
+@import url('https://fonts.googleapis.com/css2?family=Dancing+Script:wght@400;500;600;700&family=Open+Sans:wght@400;600;700&display=swap');
+body {
+  font-family: "Open Sans", sans-serif;
+  color: #ffffff;
+  background-color: #0c0b10;
+  overflow-x: hidden;
+}
+.layout_padding {
+  padding: 90px 0;
+}
+.layout_padding2 {
+  padding: 75px 0;
+}
+.layout_padding2-top {
+  padding-top: 75px;
+}
+.layout_padding2-bottom {
+  padding-bottom: 75px;
+}
+.layout_padding-top {
+  padding-top: 90px;
+}
+.layout_padding-bottom {
+  padding-bottom: 90px;
+}
+h1, h2 {
+  font-family: 'Dancing Script', cursive;
+}
+.heading_container {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+.heading_container h2 {
+  position: relative;
+  margin-bottom: 0;
+  font-size: 2.5rem;
+  font-weight: bold;
+}
+.heading_container h2 span {
+  color: #232D3F;
+}
+.heading_container p {
+  margin-top: 10px;
+  margin-bottom: 0;
+}
+.heading_container.heading_center {
+  align-items: center;
+  text-align: center;
+}
+a, a:hover, a:focus {
+  text-decoration: none;
+}
+a:hover, a:focus {
+  color: initial;
+}
+.btn, .btn:focus {
+  outline: none !important;
+  box-shadow: none;
+}
+body {
+    background-image: url('../../images/imagesnew/wallpaper.jpg');
+    background-size: cover; /* This will make sure that your image covers the whole page */
+    background-position: center; /* This will center your image in the page */
+    background-repeat: no-repeat; /* This will prevent the image from repeating */
+    background-attachment: fixed; /* This will make the background image fixed during scroll */
+}
+/*header section*/
+.hero_area {
+  position: relative;
+  min-height: 25vh;
+  display: flex;
+  flex-direction: column;
+}
+.bg-box {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+}
+.bg-box img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+.sub_page .hero_area {
+  min-height: auto;
+}
+.sub_page .hero_area .bg-box {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+}
+.sub_page .hero_area .bg-box img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: right top;
+}
+.header_section {
+  padding: 15px 0;
+}
+.header_section .container-fluid {
+  padding-right: 25px;
+  padding-left: 25px;
+}
+.navbar-brand {
+  font-family: 'Dancing Script', cursive;
+}
+.navbar-brand span {
+  font-weight: bold;
+  font-size: 32px;
+  color: #ffffff;
+}
+.custom_nav-container {
+  padding: 0;
+}
+.custom_nav-container .navbar-nav {
+  padding-left: 18%;
+}
+.custom_nav-container .navbar-nav .nav-item .nav-link {
+  padding: 6px 25px;
+  color: #ffffff;
+  text-align: justify;
+  text-transform: uppercase;
+  border-radius: 5px;
+  transition: all 0.3s;
+}
+.custom_nav-container .navbar-nav .nav-item:hover .nav-link, .custom_nav-container .navbar-nav .nav-item.active .nav-link {
+  color: #007EA7;
+}
+
+
+.user_option .order_online {
+  display: inline-block;
+  padding: 8px 30px;
+  background-color: #007EA7;
+  color: #ffffff;
+  border-radius: 45px;
+  transition: all 0.3s;
+  border: none;
+}
+.user_option .order_online:hover {
+  background-color: #008170;
+}
+.custom_nav-container .navbar-toggler {
+  outline: none;
+}
+.custom_nav-container .navbar-toggler {
+  padding: 0;
+  width: 37px;
+  height: 42px;
+  transition: all 0.3s;
+}
+.custom_nav-container .navbar-toggler span {
+  display: block;
+  width: 35px;
+  height: 4px;
+  background-color: #ffffff;
+  margin: 7px 0;
+  transition: all 0.3s;
+  position: relative;
+  border-radius: 5px;
+  transition: all 0.3s;
+}
+header {
+    position: sticky;
+    top: 0;
+    z-index: 100000; /* Ensures the header stays on top of other elements */
+    background-color: #0e0b0b; /* Or any color you prefer */
+    /* Add other styling as needed (padding, box-shadow, etc.) */
+}
+.custom_nav-container .navbar-toggler span::before, .custom_nav-container .navbar-toggler span::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  height: 100%;
+  width: 100%;
+  background-color: #ffffff;
+  top: -10px;
+  border-radius: 5px;
+  transition: all 0.3s;
+}
+.custom_nav-container .navbar-toggler span::after {
+  top: 10px;
+}
+.custom_nav-container .navbar-toggler[aria-expanded="true"] {
+  transform: rotate(360deg);
+}
+.custom_nav-container .navbar-toggler[aria-expanded="true"] span {
+  transform: rotate(45deg);
+}
+.custom_nav-container .navbar-toggler[aria-expanded="true"] span::before, .custom_nav-container .navbar-toggler[aria-expanded="true"] span::after {
+  transform: rotate(90deg);
+  top: 0;
+}
+
+.order_online #cart-count {
+    background-color: red;
+    color: white;
+    border-radius: 50%;
+    padding: 2px 5px;
+    font-size: 0.8em;
+    margin-left: 5px;
+    vertical-align: center;
+}
+/*end header section*/
+
+/*.food_section .filters_menu {*/
+/*  padding: 0;*/
+/*  display: flex;*/
+/*  flex-wrap: wrap;*/
+/*  justify-content: center;*/
+/*  list-style-type: none;*/
+/*  margin: 45px 0 20px 0;*/
+/*}*/
+/*.food_section .filters_menu li {*/
+/*  padding: 7px 25px;*/
+/*  cursor: pointer;*/
+/*  border-radius: 25px;*/
+/*}*/
+/*.food_section .filters_menu li.active {*/
+/*  background-color: #25283d;*/
+/*  color: #ffffff;*/
+/*}*/
+.food_section .box {
+  position: relative;
+  margin-top: 15px;
+  background-color: #000000;
+  border-radius: 10px;
+  color: #ffffff;
+  border-radius: 15px;
+  overflow: hidden;
+  background: linear-gradient(to bottom, #3d252c 25px, #1b1b1e 25px);
+}
+.food_section .box .img-box {
+  background: #000000;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 215px;
+  border-radius: 0 0 0 45px;
+  margin: -1px;
+  padding: 25px;
+}
+.food_section .box .img-box img {
+  max-width: 100%;
+  max-height: 145px;
+  transition: all 0.2s;
+}
+.food_section .box .detail-box {
+  padding: 25px;
+}
+.food_section .box .detail-box h5 {
+  font-weight: 600;
+}
+.food_section .box .detail-box p {
+  font-size: 15px;
+}
+.food_section .box .detail-box h6 {
+  margin-top: 10px;
+}
+.food_section .box .options {
+  display: flex;
+  justify-content: space-between;
+}
+.food_section .box .options a {
+  width: 40px;
+  height: 40px;
+  border-radius: 100%;
+  background: #007EA7;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.food_section .box .options a svg {
+  width: 18px;
+  height: auto;
+  fill: #ffffff;
+}
+.food_section .box:hover .img-box img {
+  transform: scale(1.4);
+}
+.food_section .btn-box {
+  display: flex;
+  justify-content: center;
+  margin-top: 45px;
+}
+.food_section .btn-box a {
+  display: inline-block;
+  padding: 10px 55px;
+  background-color: #f3f5f6;
+  color: #ffffff;
+  border-radius: 45px;
+  transition: all 0.3s;
+  border: none;
+}
+.add-to-cart .fa-shopping-cart {
+    color: #ffffff; /* Replace with your desired color */
+}
+.add-to-cart .fa-shopping-cart:hover {
+    color: #79B473; /* Replace with your desired hover color */
+}
+.food_section .btn-box a:hover {
+  background-color: #79B473;
+}
+
+.invisible-button {
+  background: transparent;
+  border: none;
+  outline: none;
+  color: transparent;
+  width: 50px; /* Adjust the width as needed */
+  height: 50px; /* Adjust the height as needed */
+  position: fixed;
+  left: 0px; /* Distance from the right edge */
+  top: 0px; /* Distance from the bottom edge */
+  cursor: pointer; /* Optional, changes the cursor on hover */
+}
+
+/* Checkout Container */
+.checkout-container {
+    background-color: rgba(27, 27, 30, 0.95); /* Semi-transparent background */
+    color: white;
+    max-width: 600px;
+    margin: 50px auto; /* Adjust top and bottom margin as needed */
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    position: relative; /* To ensure it's above the background image */
+    z-index: 2; /* Higher than the background image */
+}
+
+.checkout-title {
+    text-align: center;
+    margin-bottom: 20px;
+    /* Add more styling as needed */
+}
+/* Cart Item Style */
+.cart-item {
+    display: flex;
+    color: #ddd;
+    justify-content: space-between;
+    padding: 10px 0;
+    border-bottom: 1px solid #ddd;
+}
+
+.cart-item span {
+    font-size: 16px;
+    color: #ddd;
+}
+
+/* Total Amount Style */
+.total {
+    text-align: right;
+    padding: 15px 0;
+    font-size: 18px;
+    font-weight: bold;
+}
+
+/* Payment Buttons Style */
+.payment-buttons {
+    text-align: center;
+    padding-top: 20px;
+}
+
+.payment-buttons button {
+    padding: 10px 20px;
+    margin: 0 10px;
+    background-color: #007EA7;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+}
+
+.payment-buttons button:hover {
+    background-color: #79B473;
+}
+
+/* Hidden Cash Payment Input Style */
+#cash-payment-input {
+    text-align: center;
+    padding: 20px 0;
+}
+
+#cash-payment-input input {
+    padding: 10px;
+    margin-right: 10px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+}
+
+#cash-payment-input button {
+    padding: 10px 20px;
+    background-color: #008CBA;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+#cash-payment-input button:hover {
+    background-color: #007B9E;
+}
+
+.remove-item-btn {
+    background-color: transparent;
+    border: none;
+    color: #ff6b6b; /* Red color for the remove icon */
+    cursor: pointer;
+}
+
+.remove-item-btn:hover {
+    color: #ff4747; /* Darker shade of red on hover */
+}
+
+.cancel-order-btn {
+    background-color: #007EA7;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+    padding: 10px 20px;
+    margin-top: 20px;
+}
+
+.cancel-order-btn:hover {
+    background-color: #79B473;
+}
