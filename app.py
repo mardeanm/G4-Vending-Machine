@@ -230,21 +230,21 @@ def login():
     return render_template('login.html')
 @app.route('/login_submit', methods=['POST'])
 def login_submit():
-
     employee_id = request.json['employee_id']
     password = request.json['password']
 
-    mysql_conn = get_mysql_connection()
-    mysql_cursor = mysql_conn.cursor()
+    # Connect to SQLite database
+    conn = sqlite3.connect('vending_machines_DB.sqlite.db')
+    cursor = conn.cursor()
 
-    # Query the MySQL database
-    query = "SELECT * FROM Employee WHERE ID = %s AND Password = %s"
-    mysql_cursor.execute(query, (employee_id, password))
-    employee = mysql_cursor.fetchone()
+    # Query the SQLite database
+    query = "SELECT * FROM Employee WHERE ID = ? AND Password = ?"
+    cursor.execute(query, (employee_id, password))
+    employee = cursor.fetchone()
 
-    # Close MySQL connection
-    mysql_cursor.close()
-    mysql_conn.close()
+    # Close SQLite connection
+    cursor.close()
+    conn.close()
 
     if employee:
         # Return success response

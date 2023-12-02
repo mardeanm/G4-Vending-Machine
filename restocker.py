@@ -36,35 +36,35 @@ def get_low_stock_items(quantities,items,low_stock_threshold=5):
 def get_instructions(VM_ID):
     # Connect to MySQL and fetch instructions
     # Return either the instructions or "No Instructions"
-    try:
-        with open('config.json') as config_file:
-            config = json.load(config_file)
-
-        mysql_conn = mysql.connector.connect(
-            host=config["host"],
-            user=config["mysql_user"],
-            password=config["mysql_password"],
-            database=config["database"]
-        )
-        mysql_conn = mysql_conn
-        mysql_cursor = mysql_conn.cursor()
-
-        # Assuming 'VM_ID' is the column to match and it's stored in a variable VM_ID
-        mysql_cursor.execute("SELECT Instructions FROM VM WHERE VM_ID = %s", (VM_ID,))
-        result = mysql_cursor.fetchone()
-
-        # Check if result is not None and Instructions is not null
-        instructions = result[0] if result and result[0] is not None else "No Instructions"
-
-        return instructions
-
-    except mysql.connector.Error as err:
-        print("Error occurred:", err)
-        return "No Instructions"
-    finally:
-        mysql_cursor.close()
-        mysql_conn.close()
-
+    # try:
+    #     with open('config.json') as config_file:
+    #         config = json.load(config_file)
+    #
+    #     mysql_conn = mysql.connector.connect(
+    #         host=config["host"],
+    #         user=config["mysql_user"],
+    #         password=config["mysql_password"],
+    #         database=config["database"]
+    #     )
+    #     mysql_conn = mysql_conn
+    #     mysql_cursor = mysql_conn.cursor()
+    #
+    #     # Assuming 'VM_ID' is the column to match and it's stored in a variable VM_ID
+    #     mysql_cursor.execute("SELECT Instructions FROM VM WHERE VM_ID = %s", (VM_ID,))
+    #     result = mysql_cursor.fetchone()
+    #
+    #     # Check if result is not None and Instructions is not null
+    #     instructions = result[0] if result and result[0] is not None else "No Instructions"
+    #
+    #     return instructions
+    #
+    # except mysql.connector.Error as err:
+    #     print("Error occurred:", err)
+    #     return "No Instructions"
+    # finally:
+    #     mysql_cursor.close()
+    #     mysql_conn.close()
+    pass
 
 
 def add_to_inventory(VM_ID):
