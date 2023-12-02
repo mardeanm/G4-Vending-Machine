@@ -1,65 +1,102 @@
-# restocker.py
+from flask import Flask, render_template, request, jsonify
 import sqlite3
-from flask import jsonify, request
-
-VM_ID=1
-
-def update_expiration_dates(db_path):
-
-# Connect to the SQLite database
-    conn = sqlite3.connect(db_path)
-    cur = conn.cursor()
-
-    # SQL to update the expiration date in the inventory table
-    # This assumes 'Purchase_date' is stored in a format that SQLite can perform date calculations on
-    # and 'shelf_life' is stored as an integer number of weeks in the items table.
-    update_sql = """
-    UPDATE Inventory  -- Make sure this matches the table name's case in the database
-    SET Expiration_Date = (
-        SELECT date(Stock_Date, '+' || (Items.Shelf_Life * 7) || ' days')
-        FROM Items
-        WHERE Items.Item_ID = Inventory.Item_ID
-    )
-    WHERE Inventory.Item_ID IN (SELECT Item_ID FROM Items)
-    """
-
-    # Execute the SQL command
-    cur.execute(update_sql)
-
-    # Commit the changes to the database
-    conn.commit()
-
-    # Close the connection
-    conn.close()
-def update_inventory(item_id, quantity):
-    conn = sqlite3.connect('vending_machines_DB.sqlite.db')
-    cur = conn.cursor()
-
-    # Check if the item exists in the inventory
-    cur.execute("SELECT Quantity FROM Inventory WHERE Item_ID = ?", (item_id,))
-    result = cur.fetchone()
-
-    if result:
-        # Update the quantity if the item exists
-        new_quantity = result[0] + quantity
-        cur.execute(
-            "UPDATE Inventory SET Quantity = ? WHERE Item_ID = ?", (new_quantity, item_id))
-    else:
-        # Insert new item into inventory if it doesn't exist
-        cur.execute(
-            "INSERT INTO Inventory (Item_ID, Quantity) VALUES (?, ?)", (item_id, quantity))
-
-    conn.commit()
-    conn.close()
+import mysql.connector
+import json
+from datetime import datetime, timedelta
 
 
-def restock():
+
+def get_expired_items():
+    with sqlite3.connect('vending_machines_DB.sqlite.db') as conn:
+        cur = conn.cursor()
+        cur.execute("""
+            SELECT Inventory.Item_ID, Items.Item_Name, Inventory.Quantity, Inventory.Expiration_Date 
+            FROM Inventory 
+            INNER JOIN Items ON Inventory.Item_ID = Items.Item_ID
+            WHERE Inventory.Expiration_Date <= ?
+        """, (datetime.now() + timedelta(weeks=1),))
+        expired_items = cur.fetchall()
+    return expired_items
+
+def get_low_stock_items(quantities,items,low_stock_threshold=5):
+
+    low_stock_items = []
+    for item_id, quantity in quantities.items():
+        if quantity <= low_stock_threshold:
+            item_info = items.get(item_id, {})
+
+            low_stock_items.append({
+                'Item_ID': item_id,
+                'Item_Name': item_info.get('name', 'Unknown'),
+                'Quantity': quantity
+            })
+
+    return low_stock_items
+
+def get_instructions(VM_ID):
+    # Connect to MySQL and fetch instructions
+    # Return either the instructions or "No Instructions"
+    try:
+        with open('config.json') as config_file:
+            config = json.load(config_file)
+
+        mysql_conn = mysql.connector.connect(
+            host=config["host"],
+            user=config["mysql_user"],
+            password=config["mysql_password"],
+            database=config["database"]
+        )
+        mysql_conn = mysql_conn
+        mysql_cursor = mysql_conn.cursor()
+
+        # Assuming 'VM_ID' is the column to match and it's stored in a variable VM_ID
+        mysql_cursor.execute("SELECT Instructions FROM VM WHERE VM_ID = %s", (VM_ID,))
+        result = mysql_cursor.fetchone()
+
+        # Check if result is not None and Instructions is not null
+        instructions = result[0] if result and result[0] is not None else "No Instructions"
+
+        return instructions
+
+    except mysql.connector.Error as err:
+        print("Error occurred:", err)
+        return "No Instructions"
+    finally:
+        mysql_cursor.close()
+        mysql_conn.close()
+
+
+
+def add_to_inventory(VM_ID):
     data = request.json
-    item_id = data['item_id']
-    quantity = data['quantity']
+    item_id = data.get('item_id')
+    quantity = data.get('quantity')
 
     try:
-        update_inventory(item_id, quantity)
-        return jsonify(success=True, message="Restocking completed"), 200
+        conn = sqlite3.connect('vending_machines_DB.sqlite.db')
+        cur = conn.cursor()
+
+        # Get shelf life of the item
+        cur.execute("SELECT Shelf_Life FROM Items WHERE Item_ID = ?", (item_id,))
+        shelf_life = cur.fetchone()
+        if not shelf_life:
+            return jsonify({'success': False, 'message': 'Item not found'}), 404
+
+        # Calculate expiration date
+        expiration_date = datetime.now() + timedelta(weeks=shelf_life[0])
+
+        # Set stock date to current date
+        stock_date = datetime.now().strftime("%Y-%m-%d")
+
+        # Insert into Inventory
+        cur.execute("INSERT INTO Inventory (VM_ID, Item_ID, Quantity, Expiration_Date, Stock_Date) VALUES (?, ?, ?, ?, ?)",
+                    (VM_ID, item_id, quantity, expiration_date.strftime("%Y-%m-%d"), stock_date))
+
+        conn.commit()
+        return jsonify({'success': True, 'message': 'Item added successfully'}), 200
+
     except sqlite3.Error as e:
-        return jsonify(success=False, message=str(e)), 500
+        return jsonify({'success': False, 'message': str(e)}), 500
+
+    finally:
+        conn.close()
