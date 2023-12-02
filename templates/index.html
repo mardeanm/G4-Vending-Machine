@@ -16,7 +16,7 @@
   <meta name="keywords" content="" />
   <meta name="description" content="Vending Machine Application" />
   <meta name="author" content="" />
-  <link rel="shortcut icon" href="../static/images/imagesnew/5853892.png" type="">
+  <link rel="shortcut icon" href="../static/images/imagesnew/page_icon.png" type="">
 
   <title> G4 Vending Machine </title>
 
@@ -54,9 +54,9 @@
                 </span>
             </span>
 
-          <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+          <button class="navbar-toggler" type="button" aria-label="Toggle navigation">
             <span class=""> </span>
-          </button>
+        </button>
 
           <div class="collapse navbar-collapse" id="navbarSupportedContent">
             <ul class="navbar-nav  mx-auto ">
@@ -395,7 +395,7 @@
           </div>
         </div>
       </div>
-<button class="invisible-button" onclick="yourFunction()">Invisible Button</button>
+<button class="invisible-button" >Invisible Button</button>
     </div>
   </section>
 
@@ -419,6 +419,7 @@
   <!-- End Google Map -->
 
 <script>
+
      var itemIds = {{ item_ids | tojson | safe }};
      console.log(itemIds);
 document.addEventListener('DOMContentLoaded', function() {
@@ -439,6 +440,9 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 document.querySelector('.order_online').addEventListener('click', function() {
     window.location.href = '/checkout';
+});
+document.querySelector('.invisible-button').addEventListener('click', function() {
+    window.location.href = '/login';
 });
 function updateItemQuantity(item_id) {
     fetch(`/item_quantity/${item_id}?_=${new Date().getTime()}`)  // Adding a timestamp to prevent caching

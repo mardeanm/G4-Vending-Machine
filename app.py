@@ -2,11 +2,7 @@
 #show product options w/ price, quantity available
 # adding the items to cart
 #check out
-#be able to cancel the order
-
-#if card deny wait for different payment
-#update the database
-#offer recipet through phone or none
+#upodate last purchased date
 #go back to standby
 #if afk go to stand by mode clearing the cart
 #Just create a website in Python using Flask or Django or some other python web
@@ -15,13 +11,17 @@
 # SELECT COUNT(*)
 #FROM Products;
 # to update batch
-from flask import Flask, request, jsonify, render_template
+from flask import Flask, request, jsonify, render_template, redirect, url_for
 import sqlite3
+import json
+import mysql
 from apscheduler.schedulers.background import BackgroundScheduler
 import DB_updater
 import datetime
-app = Flask(__name__)
+import os
 
+app = Flask(__name__)
+app.secret_key = os.urandom(24)
 VM_ID=1
 items={}
 quantities={}
@@ -52,10 +52,6 @@ class Cart:
         global quantities  # Ensure you are using the global quantities dictionary
         item_id=int(item_id)
 
-        # Debugging: Print current quantities
-        # print(f"Current available quantity for item {item_id}: {quantities.get(item_id, 0)}")
-        # print(f"Current quantity in cart for item {item_id}: {self.items.get(item_id, {}).get('quantity', 0)}")
-
         # Check if adding the item exceeds available quantity
         if quantities.get(item_id, 0) == 0:
             return False, "Not enough stock"
@@ -68,10 +64,7 @@ class Cart:
             self.cart_count += quantity
             quantities[item_id] -= quantity
 
-            # # Debugging: Print updated quantities
-            # print(f"Updated available quantity for item {item_id}: {quantities[item_id]}")
-            # print(f"Updated quantity in cart for item {item_id}: {self.items[item_id]['quantity']}")
-            # print(self.items)
+            #
             return True, "Item added to cart"
 
     def calculate_total(self):
@@ -127,6 +120,18 @@ def add_to_cart():
 
     success, message = cart.add_item(item_id, quantity, name, price)
     return jsonify(success=success, message=message)
+
+
+@app.route('/item_quantity/<int:item_id>')
+def get_item_quantity(item_id):
+    global quantities
+    quantity = quantities.get(item_id, 0)
+    return jsonify(quantity=quantity)
+@app.route('/cart_count')
+def get_cart_count():
+    return jsonify(cart_count=cart.cart_count)
+
+
 @app.route('/remove_from_cart/<int:item_id>', methods=['POST'])
 def remove_from_cart(item_id):
     # Logic to remove item from cart and update quantities
@@ -144,14 +149,7 @@ def cancel_order():
         quantities[item_id] += item['quantity']
     cart.clear_cart()
     return jsonify(success=True)
-@app.route('/item_quantity/<int:item_id>')
-def get_item_quantity(item_id):
-    global quantities
-    quantity = quantities.get(item_id, 0)
-    return jsonify(quantity=quantity)
-@app.route('/cart_count')
-def get_cart_count():
-    return jsonify(cart_count=cart.cart_count)
+
 @app.route('/pay_with_cash', methods=['POST'])
 def pay_with_cash():
     # Process cash payment
@@ -210,20 +208,77 @@ def process_card_payment(card_details, amount):
     # Placeholder function for processing card payment
     return True  # Assume payment is always successful for simulation
 
-def start_scheduler():
-    scheduler = BackgroundScheduler()
-    scheduler.add_job(func=DB_updater.transfer_data(vm_id=VM_ID), trigger="interval",  hours=12)
-    scheduler.start()
-
-
-
 @app.route('/checkout')
 def checkout():
     global items, quantities
     get_items()  # Refresh items and quantities
     return render_template('checkout.html', cart=cart, items=items)
 
+def get_mysql_connection():
+    with open('config.json') as config_file:
+        config = json.load(config_file)
 
+    mysql_conn = mysql.connector.connect(
+        host=config["host"],
+        user=config["mysql_user"],
+        password=config["mysql_password"],
+        database=config["database"]
+    )
+    return mysql_conn
+@app.route('/login')
+def login():
+    return render_template('login.html')
+@app.route('/login_submit', methods=['POST'])
+def login_submit():
+
+    employee_id = request.json['employee_id']
+    password = request.json['password']
+
+    mysql_conn = get_mysql_connection()
+    mysql_cursor = mysql_conn.cursor()
+
+    # Query the MySQL database
+    query = "SELECT * FROM Employee WHERE ID = %s AND Password = %s"
+    mysql_cursor.execute(query, (employee_id, password))
+    employee = mysql_cursor.fetchone()
+
+    # Close MySQL connection
+    mysql_cursor.close()
+    mysql_conn.close()
+
+    if employee:
+        # Return success response
+        return jsonify({'success': True})
+    else:
+        # Return failure response
+        return jsonify({'success': False, 'message': 'Login failed. Please try again.'})
+
+
+@app.route('/restocker')
+def restocker():
+
+    return render_template('restocker.html')
+
+@app.route('/add_to_inventory', methods=['POST'])
+def add_to_inventory_route():
+    from restocker import add_to_inventory
+    return add_to_inventory(VM_ID)
+@app.route('/restocker-2')
+def restocker_2():
+
+    from restocker import get_low_stock_items,get_expired_items,get_instructions
+    low_stock_items=get_low_stock_items(quantities,items)
+    expired_items=get_expired_items()
+    instructions=get_instructions(VM_ID)
+    print(expired_items)
+
+    return render_template('restocker-2.html', low_stock_items=low_stock_items,expired_items=expired_items,instructions=instructions)
+from flask import session
+
+def start_scheduler():
+    scheduler = BackgroundScheduler()
+    scheduler.add_job(func=DB_updater.transfer_data(vm_id=VM_ID), trigger="interval",  hours=12)
+    scheduler.start()
 @app.route('/')
 def main_page():
     global item_ids, items, quantities
@@ -231,7 +286,7 @@ def main_page():
     item_ids = list(items.keys())
     return render_template('index.html', items=items, quantities=quantities, item_ids=item_ids)
 if __name__ == '__main__':
-    #start_scheduler()
+    start_scheduler()
     app.run(debug=True)
 
 

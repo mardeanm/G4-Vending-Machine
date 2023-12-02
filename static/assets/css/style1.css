@@ -334,7 +334,7 @@ header {
     z-index: 2; /* Higher than the background image */
 }
 
-.checkout-title {
+.title {
     text-align: center;
     margin-bottom: 20px;
     /* Add more styling as needed */
@@ -433,3 +433,36 @@ header {
 .cancel-order-btn:hover {
     background-color: #79B473;
 }
+.login-container {
+    background-color: rgba(27, 27, 30, 0.95); /* Semi-transparent background */
+    color: white;
+    max-width: 600px;
+    margin: 50px auto; /* Adjust top and bottom margin as needed */
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    position: relative; /* To ensure it's above the background image */
+    z-index: 2; /* Higher than the background image */
+}
+
+.restocker-container {
+    background-color: rgba(27, 27, 30, 0.95); /* Semi-transparent background */
+    color: white;
+    max-width: 600px;
+    margin: 50px auto; /* Adjust top and bottom margin as needed */
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    position: relative; /* To ensure it's above the background image */
+    z-index: 2; /* Higher than the background image */
+}
+
+.generate-button {
+        padding: 10px 20px;
+        background-color: #008CBA;
+        color: white;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        text-align: center;
+    }
