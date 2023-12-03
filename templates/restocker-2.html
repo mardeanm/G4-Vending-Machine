@@ -80,30 +80,62 @@
 <div id="report-container">
     <div id="report-container">
 
-        <!-- Expired Items -->
-        {% if expired_items %}
-            <h3>Expired Items</h3>
-            <ul>
-                {% for item in expired_items %}
-                    <li>Item ID: {{ item[0] }}, Name: {{ item[1] }}, Quantity: {{ item[2] }}, Expiration Date: {{ item[3] }}</li>
-                {% endfor %}
-            </ul>
-        {% endif %}
+      {% if expired_items %}
+    <h3>Expired Items</h3>
+    <form id="expiredItemsForm" action="/remove_expired_items" method="post">
+        <table style="width: 100%; border-collapse: collapse;">
+            <tr>
+                <th style="width: 20%; padding: 10px; border: 1px solid black;">Item ID</th>
+                <th style="width: 20%; padding: 10px; border: 1px solid black;">Item Name</th>
+                <th style="width: 20%; padding: 10px; border: 1px solid black;">Quantity</th>
+                <th style="width: 20%; padding: 10px; border: 1px solid black;">Expiration Date</th>
+                <th style="width: 20%; padding: 10px; border: 1px solid black;">Remove</th>
+            </tr>
+            {% for item in expired_items %}
+                <tr>
+                    <td style="padding: 10px; border: 1px solid black;">{{ item[0] }}</td>
+                    <td style="padding: 10px; border: 1px solid black;">{{ item[1] }}</td>
+                    <td style="padding: 10px; border: 1px solid black;">{{ item[2] }}</td>
+                    <td style="padding: 10px; border: 1px solid black;">{{ item[3] }}</td>
+                    <td style="padding: 10px; border: 1px solid black;"><input type="checkbox" name="item_to_remove" value="{{ item[0] }}_{{ item[3] }}"></td>
+                </tr>
+            {% endfor %}
+        </table>
+        <button type="submit" class="generate-button">Remove Selected Items</button>
+    </form>
+{% endif %}
 
 {#        <!-- Low Stock Items -->#}
-        {% if low_stock_items %}
-            <h3>Low Stock Items</h3>
-            <ul>
-                {% for item in low_stock_items %}
-                    <li>Item ID: {{ item.Item_ID }}, Name: {{ item.Item_Name }}, Quantity: {{ item.Quantity }}</li>
-                {% endfor %}
-            </ul>
-        {% endif %}
+    {% if low_stock_items %}
+    <h3>Low Stock Items</h3>
+    <form id="lowStockItemsForm" action="/restock_items" method="post">
+        <table style="width: 100%; border-collapse: collapse;">
+            <tr>
+                <th style="width: 20%; padding: 10px; border: 1px solid black;">Item ID</th>
+                <th style="width: 20%; padding: 10px; border: 1px solid black;">Name</th>
+                <th style="width: 20%; padding: 10px; border: 1px solid black;">Replenish</th>
+                <th style="width: 20%; padding: 10px; border: 1px solid black;">Restock</th>
+            </tr>
+            {% for item in low_stock_items %}
+                <tr>
+                    <td style="padding: 10px; border: 1px solid black;">{{ item.Item_ID }}</td>
+                    <td style="padding: 10px; border: 1px solid black;">{{ item.Item_Name.strip('"') }}</td>
+                    <td style="padding: 10px; border: 1px solid black;">{{ item.Quantity }}</td>
+                    <td>
+                     <input type="checkbox" name="item_to_restock" value="{{ item.Item_ID }}_{{ item.Quantity }}">
+                     </td>
+                </tr>
+            {% endfor %}
+        </table>
+        <button type="submit" class="generate-button">Restock Selected Items</button>
+    </form>
+{% endif %}
+
 
         <!-- Instructions -->
         {% if instructions %}
             <h3>Instructions</h3>
-            <p>{{ instructions }}</p>
+            <p>{{ instructions.strip('"') }}</p>
         {% endif %}
 
 
@@ -115,7 +147,46 @@
 
 </div>
 <script type="text/javascript">
-    {#var reportData = JSON.parse('{{ report_data_json | tojson | safe }}');#}
+      // Function to handle form submission
+        document.getElementById('expiredItemsForm').onsubmit = function(event) {
+            // Prevent the default form submission
+            event.preventDefault();
+
+            // Collect form data
+            var formData = new FormData(this);
+
+            // Send data using Fetch API
+            fetch('/remove_expired_items', {
+                method: 'POST',
+                body: formData
+            })
+            .then(response => response.json())
+            .then(data => {
+                // Display a popup message
+                alert(data.message);
+            })
+            .catch(error => {
+                // Handle any errors
+                alert('An error occurred');
+            });
+        };
+
+        document.getElementById('lowStockItemsForm').onsubmit = function(event) {
+    event.preventDefault();
+    var formData = new FormData(this);
+
+    fetch('/restock_items', {
+        method: 'POST',
+        body: formData
+    })
+    .then(response => response.json())
+    .then(data => {
+        alert(data.message);
+    })
+    .catch(error => {
+        alert('An error occurred');
+    });
+};
 </script>
 
 

@@ -1,16 +1,4 @@
-#if not in use standby
-#show product options w/ price, quantity available
-# adding the items to cart
-#check out
-#upodate last purchased date
-#go back to standby
-#if afk go to stand by mode clearing the cart
-#Just create a website in Python using Flask or Django or some other python web
-# framework and then turn it into a Desktop app with Electron. Discord for example uses this method.
-#--use
-# SELECT COUNT(*)
-#FROM Products;
-# to update batch
+
 from flask import Flask, request, jsonify, render_template, redirect, url_for
 import sqlite3
 import json
@@ -18,11 +6,10 @@ import mysql
 from apscheduler.schedulers.background import BackgroundScheduler
 import DB_updater
 import datetime
-import os
 
 app = Flask(__name__)
-app.secret_key = os.urandom(24)
 VM_ID=1
+Max_Quantity=8
 items={}
 quantities={}
 item_ids=[]
@@ -40,7 +27,7 @@ def get_items():
     cur.execute("SELECT Item_ID, SUM(Quantity) as"
                 " TotalQuantity FROM Inventory GROUP BY Item_ID")
     quantities = {row[0]: row[1] for row in cur.fetchall()}
-
+    print(quantities)
     conn.close()
 class Cart:
     def __init__(self):
@@ -230,21 +217,21 @@ def login():
     return render_template('login.html')
 @app.route('/login_submit', methods=['POST'])
 def login_submit():
+
     employee_id = request.json['employee_id']
     password = request.json['password']
 
-    # Connect to SQLite database
-    conn = sqlite3.connect('vending_machines_DB.sqlite.db')
-    cursor = conn.cursor()
+    mysql_conn = get_mysql_connection()
+    mysql_cursor = mysql_conn.cursor()
 
-    # Query the SQLite database
-    query = "SELECT * FROM Employee WHERE ID = ? AND Password = ?"
-    cursor.execute(query, (employee_id, password))
-    employee = cursor.fetchone()
+    # Query the MySQL database
+    query = "SELECT * FROM Employee WHERE ID = %s AND Password = %s"
+    mysql_cursor.execute(query, (employee_id, password))
+    employee = mysql_cursor.fetchone()
 
-    # Close SQLite connection
-    cursor.close()
-    conn.close()
+    # Close MySQL connection
+    mysql_cursor.close()
+    mysql_conn.close()
 
     if employee:
         # Return success response
@@ -259,22 +246,67 @@ def restocker():
 
     return render_template('restocker.html')
 
-@app.route('/add_to_inventory', methods=['POST'])
-def add_to_inventory_route():
-    from restocker import add_to_inventory
-    return add_to_inventory(VM_ID)
+
 @app.route('/restocker-2')
 def restocker_2():
 
     from restocker import get_low_stock_items,get_expired_items,get_instructions
-    low_stock_items=get_low_stock_items(quantities,items)
+    low_stock_items=get_low_stock_items(quantities,items,Max_Quantity)
     expired_items=get_expired_items()
     instructions=get_instructions(VM_ID)
-    print(expired_items)
 
     return render_template('restocker-2.html', low_stock_items=low_stock_items,expired_items=expired_items,instructions=instructions)
-from flask import session
 
+
+@app.route('/remove_expired_items', methods=['POST'])
+def remove_expired_items():
+    items_to_remove = request.form.getlist('item_to_remove')
+    with sqlite3.connect('vending_machines_DB.sqlite.db') as conn:
+        cur = conn.cursor()
+        for item in items_to_remove:
+            item_id, expiration_date = item.split('_')
+            cur.execute("DELETE FROM Inventory WHERE Item_ID = ? AND Expiration_Date = ?", (item_id, expiration_date))
+        conn.commit()
+    return jsonify(message="Selected items removed successfully")
+
+@app.route('/restock_items', methods=['POST'])
+def restock_items():
+    global VM_ID, Max_Quantity
+    items_to_restock = request.form.getlist('item_to_restock')
+    vm_id = VM_ID
+    Max_Items = Max_Quantity
+
+    with sqlite3.connect('vending_machines_DB.sqlite.db') as conn:
+        cur = conn.cursor()
+
+        for item_value in items_to_restock:
+            item_id, _ = item_value.split('_')  # Split but ignore the second part
+
+            # Check current total quantity for the item
+            cur.execute("SELECT SUM(Quantity) FROM Inventory WHERE Item_ID = ?", (item_id,))
+            current_quantity = cur.fetchone()[0] or 0
+
+            # Calculate the quantity needed to reach Max_Items
+            quantity_needed = Max_Items - current_quantity
+            if quantity_needed <= 0:
+                continue  # Skip if no restocking is needed
+
+            # Fetch Shelf_Life from Items table
+            cur.execute("SELECT Shelf_Life FROM Items WHERE Item_ID = ?", (item_id,))
+            shelf_life = cur.fetchone()[0]
+
+            # Calculate Expiration_Date
+            expiration_date = (datetime.datetime.now() + datetime.timedelta(weeks=shelf_life)).date()
+
+            # Insert into Inventory
+            cur.execute("""
+                INSERT INTO Inventory (VM_ID, Item_ID, Quantity, Stock_Date, Expiration_Date) 
+                VALUES (?, ?, ?, ?, ?)
+                """, (vm_id, item_id, quantity_needed, datetime.datetime.now().date(), expiration_date))
+
+        conn.commit()
+
+    return jsonify(message="Selected items restocked successfully")
 def start_scheduler():
     scheduler = BackgroundScheduler()
     scheduler.add_job(func=DB_updater.transfer_data(vm_id=VM_ID), trigger="interval",  hours=12)
@@ -285,6 +317,8 @@ def main_page():
     get_items()
     item_ids = list(items.keys())
     return render_template('index.html', items=items, quantities=quantities, item_ids=item_ids)
+
+
 if __name__ == '__main__':
     start_scheduler()
     app.run(debug=True)

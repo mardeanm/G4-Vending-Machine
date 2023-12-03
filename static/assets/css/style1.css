@@ -309,7 +309,7 @@ header {
 }
 
 .invisible-button {
-  background: transparent;
+  background: #79B473;
   border: none;
   outline: none;
   color: transparent;
